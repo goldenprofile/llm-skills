@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/format-SKILL.md-success.svg)](#формат-навыка)
-[![Skills: 15](https://img.shields.io/badge/skills-15-informational.svg)](#каталог-навыков)
+[![Skills: 22](https://img.shields.io/badge/skills-22-informational.svg)](#каталог-навыков)
 
 Коллекция переиспользуемых **агентских навыков** (Agent Skills) для LLM-ассистентов
 программирования — прежде всего [Claude Code](https://docs.claude.com/en/docs/claude-code),
@@ -110,6 +110,18 @@ Copy-Item -Recurse 500-error-eliminator, django-audit, techlead-ai "$HOME\.claud
 | [`django-audit`](django-audit/) | Комплексный аудит Django по линзам: архитектура, безопасность (OWASP), Celery, чистота кода, техдолг, готовность к деплою, тесты. |
 | [`django-tailwind-optimizer`](django-tailwind-optimizer/) | Анализ Django-шаблонов на Tailwind CSS: дублирование стилей, переход с CDN на production-сборку. |
 
+### FastAPI
+
+| Навык | Назначение |
+|-------|------------|
+| [`fastapi-architect`](fastapi-architect/) | Проектирование и ревью FastAPI: структура (APIRouter, lifespan, pydantic-settings), Pydantic v2, async-корректность (блокировка event loop, SQLAlchemy 2.x async), DI, тесты (httpx + dependency_overrides). |
+
+### База данных и миграции
+
+| Навык | Назначение |
+|-------|------------|
+| [`migration-safety-auditor`](migration-safety-auditor/) | Аудит безопасности миграций БД (Django + Alembic) перед прод-деплоем: блокировки таблиц, downtime, потеря данных, обратная совместимость при zero-downtime, опасный backfill. Postgres и SQLite. |
+
 ### Python и качество кода
 
 | Навык | Назначение |
@@ -117,6 +129,19 @@ Copy-Item -Recurse 500-error-eliminator, django-audit, techlead-ai "$HOME\.claud
 | [`python-project-audit`](python-project-audit/) | «Проверка на блуд»: аудит бэкенда (FastAPI/Django/Flask) на готовность к продакшену — статанализ и ручной review с отчётом. |
 | [`test-coverage-auditor`](test-coverage-auditor/) | Аудит качества тестов Python/Django: тесты без assertions, моки без проверок, непокрытый критический код, skip без причины. |
 | [`techlead-ai`](techlead-ai/) | Строгое, но конструктивное code review уровня Senior Architect: баги, OWASP Top 10, производительность, Clean Code, SOLID. |
+| [`dependency-auditor`](dependency-auditor/) | Аудит зависимостей и supply-chain Python: pip-audit/safety и CVE, пиннинг и lockfiles (uv/poetry/pip-tools), безопасные апгрейды с разбором breaking changes. |
+
+### Telegram-боты (aiogram)
+
+| Навык | Назначение |
+|-------|------------|
+| [`aiogram-bot-auditor`](aiogram-bot-auditor/) | Аудит и помощь по ботам на aiogram 3.x: надёжность Telegram API (flood-control 429, блокировки, single instance), архитектура (Router/middlewares/FSM), деплой (polling под systemd, webhook+nginx, RedisStorage) и тесты. |
+
+### Деплой и инфраструктура
+
+| Навык | Назначение |
+|-------|------------|
+| [`vps-deploy-auditor`](vps-deploy-auditor/) | Деплой Python-приложений на VPS без Docker: nginx + systemd + redis + postgres. Генерация конфигов и аудит существующего деплоя (Django/FastAPI/боты) с уровнями риска. |
 
 ### Анализ кодовой базы
 
@@ -133,6 +158,13 @@ Copy-Item -Recurse 500-error-eliminator, django-audit, techlead-ai "$HOME\.claud
 | [`clarify-prompt`](clarify-prompt/) | Превращение нечётких разговорных задач в структурированные однозначные промты для AI-агента. |
 | [`git-commit-planner`](git-commit-planner/) | Разбор изменений в git и план логических атомарных коммитов вместо одного монолитного. |
 | [`session-catchup`](session-catchup/) | Возобновление прерванной сессии: восстановление контекста из git, файлов состояния и истории диалога. |
+| [`harness-engineering`](harness-engineering/) | Обвязка Python-проекта для AI-агентов: Makefile, CI (GitHub Actions), `ARCHITECTURE.md`, синхронизация `CLAUDE.md`/`AGENTS.md`, а Definition of Done вызывает остальные навыки библиотеки. Деплой systemd/nginx, Symphony опционально. |
+
+### Документация
+
+| Навык | Назначение |
+|-------|------------|
+| [`docs-generator`](docs-generator/) | Документация для соло: README, ADR, docstrings (Google style) и синхронизация `CLAUDE.md`/`AGENTS.md`. Генерация недостающего и аудит устаревшего. |
 
 ### SEO и контент
 
@@ -188,18 +220,25 @@ description: >
 ├── 500-error-eliminator/
 ├── advanced-seo-optimizer/
 ├── agent-audit/
+├── aiogram-bot-auditor/
 ├── clarify-prompt/
 ├── code-archaeologist/
 ├── codebase-express/
+├── dependency-auditor/
 ├── django-audit/
 ├── django-tailwind-optimizer/
+├── docs-generator/
 ├── fact-checker/
+├── fastapi-architect/
 ├── git-commit-planner/
 ├── google-discover-optimize/
+├── harness-engineering/
+├── migration-safety-auditor/
 ├── python-project-audit/
 ├── session-catchup/
 ├── techlead-ai/
 ├── test-coverage-auditor/
+├── vps-deploy-auditor/
 ├── .gitattributes      # нормализация переводов строк (LF)
 ├── .gitignore
 ├── LICENSE
