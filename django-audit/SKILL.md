@@ -11,6 +11,8 @@ description: >
   Это Django-специфичный разбор (ORM/N+1, Celery, шаблоны, settings, миграции) по
   конвенциям фреймворка; для фреймворк-независимого инструментального аудита
   (pylint/bandit/mypy/radon/vulture) с балльной оценкой — см. python-project-audit.
+metadata:
+  version: 1.0.0
 ---
 
 # Django Audit — модульный аудитор Django-проектов

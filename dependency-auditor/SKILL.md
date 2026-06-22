@@ -10,6 +10,8 @@ description: >
   уязвимости», «что обновить», обновляет requirements/pyproject, видит алерт Dependabot/CVE,
   настраивает lockfile или воспроизводимые сборки, или упоминает pip-audit, safety, uv.lock,
   poetry.lock, pip-tools, supply chain. Менеджеры uv/pip/poetry.
+metadata:
+  version: 1.0.0
 ---
 
 # Dependency Auditor

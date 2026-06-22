@@ -9,6 +9,8 @@ description: >
   спрашивает «почему бот падает/тормозит/дублирует ответы», пишет или чинит aiogram-бота,
   настраивает FSM/middlewares/webhook/деплой или рассылку, или упоминает aiogram,
   TelegramRetryAfter, RedisStorage, polling/webhook. Только aiogram 3.x.
+metadata:
+  version: 1.0.0
 ---
 
 # Aiogram Bot Auditor

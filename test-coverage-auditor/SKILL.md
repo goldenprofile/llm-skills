@@ -6,6 +6,8 @@ description: >
   Используй когда пользователь просит проверить тесты, coverage, качество
   тестирования, спрашивает «хорошие ли у меня тесты», «что не так с тестами»,
   или упоминает pytest, unittest, testing, test coverage.
+metadata:
+  version: 1.0.0
 ---
 
 # Test Coverage Auditor — Аудитор тестового покрытия

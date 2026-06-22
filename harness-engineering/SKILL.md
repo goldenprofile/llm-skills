@@ -9,6 +9,8 @@ description: >
   не Docker. Symphony-оркестрация — опционально. Используй когда пользователь просит настроить
   harness, подготовить проект для агентов, внедрить harness engineering, настроить среду для
   агентов, DoD/tooling-обвязку, или говорит «harness», «symphony», «оркестрация агентов».
+metadata:
+  version: 1.0.0
 ---
 
 # Harness Engineering — обвязка проекта для AI-агентов (соло)

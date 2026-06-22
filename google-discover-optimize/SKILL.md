@@ -8,6 +8,8 @@ description: >
   пользователь упоминает Google Discover, «Рекомендации Google», «лента Google», хочет
   увеличить трафик из Discover, оптимизировать статью под мобильную ленту, или спрашивает,
   почему статья не попадает в Discover. Также при упоминании Follow-фичи или Web Stories.
+metadata:
+  version: 1.0.0
 ---
 
 # Google Discover Optimization

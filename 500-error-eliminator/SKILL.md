@@ -1,6 +1,8 @@
 ---
 name: 500-error-eliminator
 description: Систематическая диагностика и устранение Django 500 Internal Server Error через анализ кода, конфигурации, шаблонов и логов. Используй когда пользователь сообщает о 500 ошибке, «Internal Server Error», падении сервера, «сайт упал», «500 на проде», или просит отладить ошибку в Django-приложении (dev или production). Для общего системного дебага не-Django багов и регрессий производительности см. навык diagnose.
+metadata:
+  version: 1.0.0
 ---
 
 # 500 Internal Server Error Eliminator

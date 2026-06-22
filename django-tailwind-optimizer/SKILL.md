@@ -1,6 +1,8 @@
 ---
 name: django-tailwind-optimizer
 description: Анализирует Django шаблоны на использование Tailwind CSS, выявляет дублирование стилей, оптимизирует для production. Используй когда пользователь работает с Django templates и Tailwind CSS, просит оптимизировать CSS, отрефакторить шаблоны, перейти с Tailwind CDN на production-ready сборку, или говорит «оптимизируй tailwind», «убери дублирование стилей», «подготовь CSS к продакшену».
+metadata:
+  version: 1.0.0
 ---
 
 # Django Tailwind Optimizer

@@ -12,6 +12,8 @@ description: >
   «правильно ли устроен мой FastAPI», «почему ручка тормозит/блокирует», «как структурировать
   проект», «как тестировать FastAPI», пишет роутеры/зависимости/Pydantic-схемы/async-БД, или
   упоминает FastAPI, Depends, response_model, lifespan, pydantic-settings. Только FastAPI.
+metadata:
+  version: 1.0.0
 ---
 
 # FastAPI Architect

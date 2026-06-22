@@ -9,6 +9,8 @@ description: >
   SEO-аудит, проверить или починить Schema.org/JSON-LD/структурированные данные,
   meta-теги, canonical, robots/sitemap, улучшить ранжирование или Core Web Vitals,
   проверить Django-шаблоны на SEO, или упоминает «seo аудит», «schema markup».
+metadata:
+  version: 1.0.0
 ---
 
 # Advanced SEO Optimizer

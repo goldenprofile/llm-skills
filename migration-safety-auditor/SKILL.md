@@ -9,6 +9,8 @@ description: >
   миграции под нагрузкой, делает zero-downtime/rolling деплой, добавляет колонку/индекс/
   constraint/FK на большой таблице, пишет data-миграцию или backfill, или упоминает migration
   review, expand/contract, CONCURRENTLY, RunPython. Поддерживает Postgres и SQLite.
+metadata:
+  version: 1.0.0
 ---
 
 # Migration Safety Auditor

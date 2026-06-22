@@ -11,6 +11,8 @@ description: >
   просит unit-файл, конфиг nginx, настройку systemd/postgres/redis, бэкап БД, проверить или
   отревьюить деплой, спрашивает «как задеплоить без Docker», «безопасен ли мой сервер»,
   «почему сервис падает после рестарта», или упоминает gunicorn, uvicorn, certbot, ufw, systemd.
+metadata:
+  version: 1.0.0
 ---
 
 # VPS Deploy Auditor

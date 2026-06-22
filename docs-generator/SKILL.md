@@ -10,6 +10,8 @@ description: >
   AGENTS.md, провести аудит документации, найти устаревшие или недостающие доки, или говорит
   «напиши README», «задокументируй проект», «нужен ADR», «добавь docstrings», «doc audit».
   Документацию агентских правил (DoD/tooling/canonical docs) глубоко настраивает harness-engineering.
+metadata:
+  version: 1.0.0
 ---
 
 # Docs Generator — документация для соло-разработчика
