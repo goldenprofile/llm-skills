@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/format-SKILL.md-success.svg)](#формат-навыка)
-[![Skills: 25](https://img.shields.io/badge/skills-25-informational.svg)](#каталог-навыков)
+[![Skills: 26](https://img.shields.io/badge/skills-26-informational.svg)](#каталог-навыков)
 
 Коллекция переиспользуемых **агентских навыков** (Agent Skills) для LLM-ассистентов
 программирования — прежде всего [Claude Code](https://docs.claude.com/en/docs/claude-code),
@@ -129,6 +129,7 @@ Copy-Item -Recurse 500-error-eliminator, django-audit, techlead-ai "$HOME\.claud
 | [`python-project-audit`](python-project-audit/) | «Проверка на блуд»: аудит бэкенда (FastAPI/Django/Flask) на готовность к продакшену — статанализ и ручной review с отчётом. |
 | [`test-coverage-auditor`](test-coverage-auditor/) | Аудит качества тестов Python/Django: тесты без assertions, моки без проверок, непокрытый критический код, skip без причины. |
 | [`techlead-ai`](techlead-ai/) | Строгое, но конструктивное code review уровня Senior Architect: баги, OWASP Top 10, производительность, Clean Code, SOLID. |
+| [`claude-code-auditor`](claude-code-auditor/) | «Второе мнение» на код, написанный Claude Code, силами **другой** LLM (DeepSeek/GLM/Kimi) через CLI Hermes (`hermes -z`): галлюцинации API, edge cases, over-engineering, отклонения от паттернов. Пять линз (Скептик, Безопасность, Надёжность, Производительность, Поддерживаемость). Требует установленного CLI `hermes`. |
 | [`dependency-auditor`](dependency-auditor/) | Аудит зависимостей и supply-chain Python: pip-audit/safety и CVE, пиннинг и lockfiles (uv/poetry/pip-tools), безопасные апгрейды с разбором breaking changes. |
 
 ### Telegram-боты (aiogram)
@@ -235,6 +236,7 @@ description: >
 ├── agent-audit/
 ├── aiogram-bot-auditor/
 ├── clarify-prompt/
+├── claude-code-auditor/
 ├── code-archaeologist/
 ├── codebase-express/
 ├── dependency-auditor/
