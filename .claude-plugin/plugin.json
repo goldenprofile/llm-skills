@@ -1,0 +1,13 @@
+{
+  "name": "llm-skills",
+  "version": "1.0.0",
+  "description": "Personal Agent Skills for a solo Python backend dev: Django/FastAPI/aiogram audits, code review, VPS deploy, DB migration safety, SEO, docs generation, harness engineering, Windows/pwsh terminal and Obsidian workflows.",
+  "author": {
+    "name": "Ivan Sinyavskiy",
+    "email": "stargot@gmail.com"
+  },
+  "homepage": "https://github.com/goldenprofile/skills",
+  "repository": "https://github.com/goldenprofile/skills",
+  "license": "MIT",
+  "skills": ["./"]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "goldenprofile",
+  "owner": {
+    "name": "Ivan Sinyavskiy",
+    "email": "stargot@gmail.com"
+  },
+  "description": "Personal Agent Skills library for a solo Python backend dev (Django/FastAPI/aiogram): audits, code review, VPS deploy, migrations, SEO, docs, harness, terminal and Obsidian skills.",
+  "plugins": [
+    {
+      "name": "llm-skills",
+      "source": "./",
+      "description": "25 Agent Skills: Django/FastAPI/aiogram audits, code review, VPS deploy, DB migration safety, SEO, docs, harness engineering, Windows terminal and Obsidian workflows.",
+      "version": "1.0.0"
+    }
+  ]
+}
