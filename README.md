@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/format-SKILL.md-success.svg)](#формат-навыка)
-[![Skills: 27](https://img.shields.io/badge/skills-27-informational.svg)](#каталог-навыков)
+[![Skills: 28](https://img.shields.io/badge/skills-28-informational.svg)](#каталог-навыков)
 
 Коллекция переиспользуемых **агентских навыков** (Agent Skills) для LLM-ассистентов
 программирования — прежде всего [Claude Code](https://docs.claude.com/en/docs/claude-code),
@@ -161,19 +161,20 @@ Copy-Item -Recurse 500-error-eliminator, django-audit, techlead-ai "$HOME\.claud
 | [`session-catchup`](session-catchup/) | Возобновление прерванной сессии: восстановление контекста из git, файлов состояния и истории диалога. |
 | [`harness-engineering`](harness-engineering/) | Обвязка Python-проекта для AI-агентов: Makefile, CI (GitHub Actions), `ARCHITECTURE.md`, синхронизация `CLAUDE.md`/`AGENTS.md`, а Definition of Done вызывает остальные навыки библиотеки. Деплой systemd/nginx, Symphony опционально. |
 | [`goal-pipeline`](goal-pipeline/) | Минимальный планировщик-исполнитель поверх нативной `/goal` (без bash, под pwsh): лёгкий recon, разбивка brownfield-задачи на фазы с измеримыми критериями, вшитые гейты toolkit по типу фазы (migration-safety-auditor, /code-review, pyright, test-coverage-auditor), одна готовая строка `/goal`, аудит против исходного плана. Профили автономности с чекпоинтом на рискованных фазах. |
+| [`ratchet-loop`](ratchet-loop/) | In-session петля-храповик: тянет ОДИН измеримый скаляр (latency, число SQL-запросов, размер бандла, pass-rate) до упора — оставляет только улучшившие изменения, остальное откатывает через git. Замороженный оценщик (anti-Goodhart) + независимый verifier-проход; сама не терминируется, крутится до бюджета/плато. |
 
 ### Документация
 
 | Навык | Назначение |
 |-------|------------|
 | [`docs-generator`](docs-generator/) | Документация для соло: README, ADR, docstrings (Google style) и синхронизация `CLAUDE.md`/`AGENTS.md`. Генерация недостающего и аудит устаревшего. |
-| [`spec-writer`](spec-writer/) | Проектные документы в трёх режимах: spec (техспецификация: проблема, цели, архитектура, ADR-решения, риски), plan (фазы, оценки, зависимости) и brief (аналитическая записка для руководства, без кода). Создан совместно с Hermes Agent. |
+| [`spec-writer`](spec-writer/) | Проектные документы в трёх режимах: spec (техспецификация: проблема, цели, архитектура, ADR-решения, риски), plan (фазы, оценки, зависимости) и brief (аналитическая записка для руководства, без кода). |
 
 ### Заметки и знания
 
 | Навык | Назначение |
 |-------|------------|
-| [`obsidian`](obsidian/) | Работа с хранилищем Obsidian (filesystem-first): клиппинги, проектные задачи со статусами, ADR, дневник, бриф проекта, синтез исследований, ревью и анализ графа тегов/ссылок. Создан совместно с Hermes Agent. |
+| [`obsidian`](obsidian/) | Работа с хранилищем Obsidian (filesystem-first): клиппинги, проектные задачи со статусами, ADR, дневник, бриф проекта, синтез исследований, ревью и анализ графа тегов/ссылок. |
 
 ### Окружение разработки
 

@@ -37,8 +37,8 @@ The parent then:
 
 If `raw.githubusercontent.com` fails or the branch isn't `main`:
 - `WebFetch` the GitHub repo page directly
-- If the page is JS-heavy and `WebFetch` returns too little, use the `agent-browser`
-  skill or Playwright MCP (if connected) to render and extract
+- If the page is JS-heavy and `WebFetch` returns too little, use Playwright MCP or
+  Claude-in-Chrome (if connected) to render and extract
 
 ## Metadata format for the clipping header
 

@@ -9,7 +9,7 @@
     {
       "name": "llm-skills",
       "source": "./",
-      "description": "27 Agent Skills: Django/FastAPI/aiogram audits, code review, VPS deploy, DB migration safety, SEO, docs, harness engineering, /goal pipeline, Windows terminal and Obsidian workflows.",
+      "description": "28 Agent Skills: Django/FastAPI/aiogram audits, code review, VPS deploy, DB migration safety, SEO, docs, harness engineering, /goal pipeline, optimization ratchet loop, Windows terminal and Obsidian workflows.",
       "version": "1.0.0"
     }
   ]

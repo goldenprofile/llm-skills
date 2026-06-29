@@ -157,8 +157,8 @@ it as a clipping.
   `curl` — you'll see "Just a moment..." or a security-check page. Fallback: save a
   minimal stub note with the URL and `⚠️ Сайт защищён Cloudflare`, then ask the user
   for a screenshot or pasted text.
-- **JS-heavy SPAs**: may need real browser automation — use the `agent-browser` skill
-  or Playwright MCP if connected.
+- **JS-heavy SPAs**: may need real browser automation — use Playwright MCP or
+  Claude-in-Chrome if connected.
 
 ### Quality HTML→Markdown conversion (technical articles, guides, docs)
 
@@ -212,7 +212,7 @@ When the user sends a PDF:
 1. Read it directly with `Read` (it supports PDFs) and extract the text/structure
 2. Copy the PDF into `<vault>/attachments/` and reference it with `![[filename.pdf]]`
 3. For scanned/garbled PDFs, fall back to vision: ask the user for a screenshot or use
-   the `agent-browser` skill to open and capture pages
+   Playwright MCP / Claude-in-Chrome to open and capture pages
 
 ## Pitfalls
 
