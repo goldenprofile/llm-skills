@@ -65,7 +65,7 @@
 ### Вариант 1. Клонировать всё и связать с каталогом навыков
 
 ```bash
-git clone https://github.com/goldenprofile/skills.git llm-skills
+git clone https://github.com/goldenprofile/llm-skills.git llm-skills
 cd llm-skills
 ```
 

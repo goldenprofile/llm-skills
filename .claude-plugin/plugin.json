@@ -6,8 +6,8 @@
     "name": "Ivan Sinyavskiy",
     "email": "stargot@gmail.com"
   },
-  "homepage": "https://github.com/goldenprofile/skills",
-  "repository": "https://github.com/goldenprofile/skills",
+  "homepage": "https://github.com/goldenprofile/llm-skills",
+  "repository": "https://github.com/goldenprofile/llm-skills",
   "license": "MIT",
   "skills": ["./"]
 }
