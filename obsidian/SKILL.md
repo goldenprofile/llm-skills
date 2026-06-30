@@ -11,7 +11,7 @@ description: >
   подвести итоги дня, сделать бриф проекта, провести ревью или навести порядок
   в тегах и связях Obsidian.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # Obsidian Vault
@@ -39,6 +39,12 @@ metadata:
 Полноценная браузерная автоматизация (JS-heavy SPA, скриншоты, PDF в браузере) —
 вне ядра навыка. Для неё используй Playwright MCP или Claude-in-Chrome, если
 они подключены.
+
+Навык ведёт обычный Obsidian-flavored markdown + wikilinks. Авторство
+Obsidian-специфичных форматов — Bases (`.base`) и Canvas (`.canvas`) — вне его ядра.
+Если нужно, чтобы агент писал валидные `.base`-вьюхи или `.canvas`-доски, подключи
+официальные [`kepano/obsidian-skills`](https://github.com/kepano/obsidian-skills)
+(скиллы `obsidian-bases` и `json-canvas`, открытая спека Agent Skills; от CEO Obsidian).
 
 ## Путь к хранилищу
 
