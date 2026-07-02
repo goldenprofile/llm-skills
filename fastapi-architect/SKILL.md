@@ -1,19 +1,18 @@
 ---
 name: fastapi-architect
 description: >
-  Проектирование и ревью FastAPI-приложений (актуальные версии, Pydantic v2): дизайн API,
-  структура проекта (APIRouter, lifespan, pydantic-settings, тонкие роуты + сервисный слой),
-  dependency injection (Depends, зависимости с yield, переопределение в тестах, auth как
-  зависимость), Pydantic v2 (модели vs схемы, model_config, валидаторы, response_model,
-  ловушки миграции v1→v2), async-корректность (блокировка event loop sync I/O, async-БД на
-  SQLAlchemy 2.x, def vs async def роуты и threadpool, BackgroundTasks vs очередь, таймауты),
-  единый формат ошибок, OpenAPI, тесты (httpx AsyncClient/TestClient, dependency_overrides,
-  тест-БД). Используй когда пользователь проектирует или ревьюит FastAPI-приложение, спрашивает
-  «правильно ли устроен мой FastAPI», «почему ручка тормозит/блокирует», «как структурировать
-  проект», «как тестировать FastAPI», пишет роутеры/зависимости/Pydantic-схемы/async-БД, или
-  упоминает FastAPI, Depends, response_model, lifespan, pydantic-settings. Только FastAPI.
+  Проектирование и ревью FastAPI-приложений (Pydantic v2): структура проекта
+  (APIRouter, lifespan, pydantic-settings, сервисный слой), dependency
+  injection, модели vs схемы, async-корректность (блокировка event loop,
+  SQLAlchemy 2.x async, def vs async def, BackgroundTasks vs очередь), формат
+  ошибок, OpenAPI, тесты (httpx AsyncClient, dependency_overrides). Используй
+  когда пользователь проектирует или ревьюит FastAPI-приложение, спрашивает
+  «правильно ли устроен мой FastAPI», «почему ручка тормозит/блокирует», «как
+  структурировать/тестировать FastAPI», пишет роутеры, зависимости или
+  Pydantic-схемы, или упоминает FastAPI, Depends, response_model, lifespan,
+  pydantic-settings. Только FastAPI.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # FastAPI Architect

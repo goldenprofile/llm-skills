@@ -1,16 +1,17 @@
 ---
 name: migration-safety-auditor
 description: >
-  Аудит безопасности миграций БД (Django migrations и Alembic/SQLAlchemy) перед прод-деплоем
-  и помощь в их безопасном переписывании. Находит блокировки таблиц, downtime, потерю данных,
-  несовместимость старого кода со схемой при zero-downtime, опасный backfill и необратимые
-  операции. Используй когда пользователь просит проверить или отревьюить миграцию, спрашивает
-  «безопасна ли миграция», «не уронит ли прод», «можно ли применять на проде», применяет
-  миграции под нагрузкой, делает zero-downtime/rolling деплой, добавляет колонку/индекс/
-  constraint/FK на большой таблице, пишет data-миграцию или backfill, или упоминает migration
-  review, expand/contract, CONCURRENTLY, RunPython. Поддерживает Postgres и SQLite.
+  Аудит безопасности миграций БД (Django migrations и Alembic/SQLAlchemy)
+  перед прод-деплоем и помощь в безопасном переписывании: блокировки таблиц,
+  downtime, потеря данных, несовместимость старого кода со схемой при
+  zero-downtime, опасный backfill, необратимые операции. Postgres и SQLite.
+  Используй когда пользователь просит проверить миграцию, спрашивает
+  «безопасна ли миграция», «не уронит ли прод», добавляет
+  колонку/индекс/constraint на большой таблице, пишет data-миграцию или
+  backfill, делает zero-downtime деплой, или упоминает migration review,
+  expand/contract, CONCURRENTLY, RunPython.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # Migration Safety Auditor

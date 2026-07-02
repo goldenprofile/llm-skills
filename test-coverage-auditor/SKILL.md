@@ -5,9 +5,11 @@ description: >
   mock'и без проверок, непокрытый критический код, skip-тесты без причины.
   Используй когда пользователь просит проверить тесты, coverage, качество
   тестирования, спрашивает «хорошие ли у меня тесты», «что не так с тестами»,
-  или упоминает pytest, unittest, testing, test coverage.
+  или упоминает pytest, unittest, testing, test coverage. Это глубокий разбор
+  именно тестов; обзорный Django-аудит с линзой tests — см. django-audit,
+  написание новых тестов — test-writer.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # Test Coverage Auditor — Аудитор тестового покрытия

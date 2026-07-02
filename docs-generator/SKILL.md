@@ -1,17 +1,16 @@
 ---
 name: docs-generator
 description: >
-  Генерация и аудит документации для соло-разработчика: README проектов, ADR (architecture
-  decision records), Python-docstrings (Google-стиль) и синхронизация CLAUDE.md/AGENTS.md.
-  Документирует «почему», а не пересказывает код; находит отсутствующую и устаревшую
-  документацию. Профиль — Python-бэкенд (Django/FastAPI/aiogram), деплой systemd/nginx/
-  redis/postgres. Используй когда пользователь просит написать или обновить README, оформить
-  ADR/архитектурное решение, добавить или проверить docstrings, синхронизировать CLAUDE.md и
-  AGENTS.md, провести аудит документации, найти устаревшие или недостающие доки, или говорит
-  «напиши README», «задокументируй проект», «нужен ADR», «добавь docstrings», «doc audit».
-  Документацию агентских правил (DoD/tooling/canonical docs) глубоко настраивает harness-engineering.
+  Генерация и аудит документации для соло-разработчика: README, ADR,
+  Python-docstrings (Google-стиль), синхронизация CLAUDE.md/AGENTS.md.
+  Документирует «почему», а не пересказывает код; находит отсутствующую и
+  устаревшую документацию. Используй когда пользователь просит написать или
+  обновить README, оформить ADR, добавить или проверить docstrings,
+  синхронизировать CLAUDE.md и AGENTS.md, или говорит «задокументируй проект»,
+  «doc audit». Для спек/планов/брифов — см. spec-writer; DoD/tooling-обвязку
+  агентских правил настраивает harness-engineering.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # Docs Generator — документация для соло-разработчика

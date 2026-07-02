@@ -1,17 +1,17 @@
 ---
 name: dependency-auditor
 description: >
-  Аудит зависимостей и supply-chain безопасности Python-проектов и помощь в безопасном
-  обновлении. Находит уязвимые пакеты (CVE через pip-audit/safety), слабый пиннинг и
-  отсутствие lockfile, неразделённые prod/dev-зависимости, устаревшие/заброшенные пакеты,
-  риски транзитивных зависимостей и typosquatting. Помогает обновлять пакеты по semver
-  без поломок (по одному/батчами, чтение breaking changes, тесты, откат). Используй когда
-  пользователь просит проверить зависимости, спрашивает «безопасны ли мои пакеты», «есть ли
-  уязвимости», «что обновить», обновляет requirements/pyproject, видит алерт Dependabot/CVE,
-  настраивает lockfile или воспроизводимые сборки, или упоминает pip-audit, safety, uv.lock,
-  poetry.lock, pip-tools, supply chain. Менеджеры uv/pip/poetry.
+  Аудит зависимостей и supply-chain безопасности Python-проектов и помощь в
+  безопасном обновлении: уязвимые пакеты (CVE через pip-audit/safety), слабый
+  пиннинг и отсутствие lockfile, неразделённые prod/dev-зависимости,
+  заброшенные пакеты, typosquatting; апгрейды по semver без поломок (батчи,
+  breaking changes, откат). Менеджеры uv/pip/poetry. Используй когда
+  пользователь просит проверить зависимости, спрашивает «есть ли уязвимости»,
+  «что обновить», обновляет requirements/pyproject, видит алерт Dependabot/CVE,
+  настраивает lockfile или воспроизводимые сборки, или упоминает pip-audit,
+  safety, uv.lock, poetry.lock, supply chain.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # Dependency Auditor

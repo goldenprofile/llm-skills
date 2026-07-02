@@ -1,17 +1,18 @@
 ---
 name: harness-engineering
 description: >
-  Внедрение harness engineering (обвязки для AI-агентов) в Python-проект соло-разработчика:
-  Django, FastAPI, aiogram-боты. Создаёт Makefile, CI (GitHub Actions),
-  ARCHITECTURE.md, обновляет CLAUDE.md и AGENTS.md (DoD, tooling, canonical docs) и вшивает в
-  Definition of Done вызовы твоих навыков (migration-safety-auditor, techlead-ai,
-  python-project-audit, test-coverage-auditor) и официальных гейтов (/code-review,
-  /security-review, pyright-lsp). Деплой-ориентир — systemd/nginx/redis/postgres,
-  не Docker. Symphony-оркестрация — опционально. Используй когда пользователь просит настроить
-  harness, подготовить проект для агентов, внедрить harness engineering, настроить среду для
-  агентов, DoD/tooling-обвязку, или говорит «harness», «symphony», «оркестрация агентов».
+  Внедрение harness engineering (обвязки для AI-агентов) в Python-проект
+  соло-разработчика: Django, FastAPI, aiogram. Создаёт Makefile, CI (GitHub
+  Actions), ARCHITECTURE.md, обновляет CLAUDE.md/AGENTS.md (DoD, tooling,
+  canonical docs) и вшивает в Definition of Done вызовы навыков библиотеки
+  (migration-safety-auditor, python-project-audit, test-coverage-auditor) и
+  официальных гейтов (/code-review, /security-review, pyright-lsp).
+  Деплой-ориентир — systemd/nginx/redis/postgres, не Docker. Используй когда
+  пользователь просит настроить harness, подготовить проект для агентов,
+  внедрить DoD/tooling-обвязку, или говорит «harness», «symphony»,
+  «оркестрация агентов».
 metadata:
-  version: 1.3.0
+  version: 1.4.0
 ---
 
 # Harness Engineering — обвязка проекта для AI-агентов (соло)

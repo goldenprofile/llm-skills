@@ -1,18 +1,18 @@
 ---
 name: vps-deploy-auditor
 description: >
-  Деплой Python-приложений на VPS без Docker и аудит существующего деплоя: nginx + systemd +
-  redis + postgresql. Покрывает Django (gunicorn/uvicorn), FastAPI (uvicorn-воркеры),
-  aiogram-боты (polling-воркер) под systemd; nginx reverse-proxy с TLS (certbot), статикой,
-  таймаутами и security-заголовками; postgres (отдельный пользователь/БД, бэкапы pg_dump,
-  лимиты соединений); redis (cache/broker/FSM, persistence, maxmemory); безопасность хоста
-  (не-root, ufw, секреты в EnvironmentFile, fail2ban). Режимы: генерация шаблонов конфигов
-  и аудит с уровнями риска. Используй когда пользователь деплоит Django/FastAPI/бота на VPS,
-  просит unit-файл, конфиг nginx, настройку systemd/postgres/redis, бэкап БД, проверить или
-  отревьюить деплой, спрашивает «как задеплоить без Docker», «безопасен ли мой сервер»,
-  «почему сервис падает после рестарта», или упоминает gunicorn, uvicorn, certbot, ufw, systemd.
+  Деплой Python-приложений на VPS без Docker и аудит существующего деплоя:
+  nginx + systemd + redis + postgresql. Django/FastAPI под gunicorn/uvicorn и
+  aiogram-боты под systemd; TLS (certbot), статика, security-заголовки, бэкапы
+  pg_dump, redis persistence, безопасность хоста (не-root, ufw, секреты в
+  EnvironmentFile, fail2ban). Режимы: генерация шаблонов конфигов и аудит с
+  уровнями риска. Используй когда пользователь деплоит на VPS, просит
+  unit-файл, конфиг nginx, настройку postgres/redis или бэкап БД, спрашивает
+  «как задеплоить без Docker», «безопасен ли мой сервер», «почему сервис
+  падает после рестарта», или упоминает gunicorn, uvicorn, certbot, ufw,
+  systemd.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # VPS Deploy Auditor
