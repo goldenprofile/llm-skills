@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/format-SKILL.md-success.svg)](#формат-навыка)
-[![Skills: 28](https://img.shields.io/badge/skills-28-informational.svg)](#каталог-навыков)
+[![Skills: 33](https://img.shields.io/badge/skills-33-informational.svg)](#каталог-навыков)
 
 Коллекция переиспользуемых **агентских навыков** (Agent Skills) для LLM-ассистентов
 программирования — прежде всего [Claude Code](https://docs.claude.com/en/docs/claude-code),
@@ -61,6 +61,18 @@
 ---
 
 ## Установка
+
+### Вариант 0. Как плагин Claude Code (рекомендуемый)
+
+Репозиторий содержит манифесты плагина (`.claude-plugin/`), поэтому вся
+библиотека ставится и обновляется одной парой команд:
+
+```
+/plugin marketplace add goldenprofile/llm-skills
+/plugin install llm-skills@goldenprofile
+```
+
+Обновление после новых релизов: `/plugin marketplace update goldenprofile`.
 
 ### Вариант 1. Клонировать всё и связать с каталогом навыков
 
@@ -121,12 +133,14 @@ Copy-Item -Recurse 500-error-eliminator, django-audit, techlead-ai "$HOME\.claud
 | Навык | Назначение |
 |-------|------------|
 | [`migration-safety-auditor`](migration-safety-auditor/) | Аудит безопасности миграций БД (Django + Alembic) перед прод-деплоем: блокировки таблиц, downtime, потеря данных, обратная совместимость при zero-downtime, опасный backfill. Postgres и SQLite. |
+| [`postgres-performance`](postgres-performance/) | Диагностика и тюнинг производительности PostgreSQL: EXPLAIN ANALYZE, индексы, pg_stat_statements, pgbouncer, autovacuum, память VPS. |
 
 ### Python и качество кода
 
 | Навык | Назначение |
 |-------|------------|
 | [`python-project-audit`](python-project-audit/) | «Проверка на блуд»: аудит бэкенда (FastAPI/Django/Flask) на готовность к продакшену — статанализ и ручной review с отчётом. |
+| [`test-writer`](test-writer/) | Написание тестов (pytest-first): стратегия покрытия, дизайн кейсов, фикстуры/фабрики, паттерны Django/FastAPI/aiogram. |
 | [`test-coverage-auditor`](test-coverage-auditor/) | Аудит качества тестов Python/Django: тесты без assertions, моки без проверок, непокрытый критический код, skip без причины. |
 | [`techlead-ai`](techlead-ai/) | Строгое, но конструктивное code review уровня Senior Architect: баги, OWASP Top 10, производительность, Clean Code, SOLID. |
 | [`claude-code-auditor`](claude-code-auditor/) | «Второе мнение» на код, написанный Claude Code, силами **другой** LLM (DeepSeek/GLM/Kimi) через CLI Hermes (`hermes -z`): галлюцинации API, edge cases, over-engineering, отклонения от паттернов. Пять линз (Скептик, Безопасность, Надёжность, Производительность, Поддерживаемость). Требует установленного CLI `hermes`. |
@@ -143,6 +157,8 @@ Copy-Item -Recurse 500-error-eliminator, django-audit, techlead-ai "$HOME\.claud
 | Навык | Назначение |
 |-------|------------|
 | [`vps-deploy-auditor`](vps-deploy-auditor/) | Деплой Python-приложений на VPS без Docker: nginx + systemd + redis + postgres. Генерация конфигов и аудит существующего деплоя (Django/FastAPI/боты) с уровнями риска. |
+| [`observability-bootstrap`](observability-bootstrap/) | Наблюдаемость на VPS: Sentry, структурные логи, healthcheck + systemd watchdog, внешний uptime, алерты на диск/память/TLS. |
+| [`vps-incident-triage`](vps-incident-triage/) | Runbook инцидентов на VPS: сервис упал/рестартится, 502/504, диск/память, postgres не отвечает. Сначала улики, потом рестарт. |
 
 ### Анализ кодовой базы
 
@@ -158,6 +174,7 @@ Copy-Item -Recurse 500-error-eliminator, django-audit, techlead-ai "$HOME\.claud
 | [`agent-audit`](agent-audit/) | Самоаудит AI-агента: актуальность проектной документации, повторяющиеся ошибки, генерация guardrails. |
 | [`clarify-prompt`](clarify-prompt/) | Превращение нечётких разговорных задач в структурированные однозначные промты для AI-агента. |
 | [`git-commit-planner`](git-commit-planner/) | Разбор изменений в git и план логических атомарных коммитов вместо одного монолитного. |
+| [`release-manager`](release-manager/) | Релизы соло-проекта: semver по диффу, CHANGELOG из Conventional Commits, git-теги и GitHub Releases, пре-релизный чеклист и smoke. |
 | [`session-catchup`](session-catchup/) | Возобновление прерванной сессии: восстановление контекста из git, файлов состояния и истории диалога. |
 | [`harness-engineering`](harness-engineering/) | Обвязка Python-проекта для AI-агентов: Makefile, CI (GitHub Actions), `ARCHITECTURE.md`, синхронизация `CLAUDE.md`/`AGENTS.md`, а Definition of Done вызывает остальные навыки библиотеки. Деплой systemd/nginx, Symphony опционально. |
 | [`goal-pipeline`](goal-pipeline/) | Минимальный планировщик-исполнитель поверх нативной `/goal` (без bash, под pwsh): лёгкий recon, разбивка brownfield-задачи на фазы с измеримыми критериями, вшитые гейты toolkit по типу фазы (migration-safety-auditor, /code-review, pyright, test-coverage-auditor), одна готовая строка `/goal`, аудит против исходного плана. Профили автономности с чекпоинтом на рискованных фазах. |
@@ -233,6 +250,7 @@ description: >
 
 ```
 .
+├── .claude-plugin/     # манифесты плагина (plugin.json, marketplace.json)
 ├── 500-error-eliminator/
 ├── advanced-seo-optimizer/
 ├── agent-audit/
@@ -245,6 +263,7 @@ description: >
 ├── django-audit/
 ├── django-tailwind-optimizer/
 ├── docs-generator/
+├── docs/               # аудиты, спеки и планы самой библиотеки
 ├── fact-checker/
 ├── fastapi-architect/
 ├── git-commit-planner/
@@ -252,18 +271,25 @@ description: >
 ├── google-discover-optimize/
 ├── harness-engineering/
 ├── migration-safety-auditor/
+├── observability-bootstrap/
 ├── obsidian/
+├── postgres-performance/
 ├── python-project-audit/
+├── ratchet-loop/
+├── release-manager/
 ├── session-catchup/
 ├── spec-writer/
 ├── techlead-ai/
 ├── test-coverage-auditor/
+├── test-writer/
 ├── vps-deploy-auditor/
+├── vps-incident-triage/
 ├── windows-pwsh-terminal/
 ├── .gitattributes      # нормализация переводов строк (LF)
 ├── .gitignore
 ├── LICENSE
-└── README.md
+├── README.md
+└── ROADMAP.md          # кандидаты в новые навыки
 ```
 
 ---
@@ -273,8 +299,13 @@ description: >
 1. Создайте папку с именем навыка в kebab-case.
 2. Добавьте `SKILL.md` с фронтматтером (`name` = имя папки) и инструкцией.
 3. Вынесите объёмные материалы в `references/` и ссылайтесь на них из `SKILL.md`.
-4. Сформулируйте `description` так, чтобы ассистент понимал, **когда** применять навык.
+   Конвенция имени справочника выходного формата — `references/output-format.md`.
+4. Сформулируйте `description` так, чтобы ассистент понимал, **когда** применять
+   навык. Лимит — **1024 символа** (валидация Anthropic); ориентир 600–900:
+   что делает → сильные триггер-фразы → разграничение со смежными навыками.
 5. Проверьте навык на реальной задаче перед коммитом.
+6. Обновите каталог и дерево в README и поднимите `version` в
+   `.claude-plugin/plugin.json` — иначе кэш маркетплейса не увидит изменений.
 
 Описания навыков в этом репозитории написаны на русском языке, что задаёт язык
 взаимодействия по умолчанию; сами навыки работают с задачами на любом языке.
