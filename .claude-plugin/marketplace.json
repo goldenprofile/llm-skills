@@ -1,0 +1,16 @@
+{
+  "name": "goldenprofile",
+  "owner": {
+    "name": "Ivan Sinyavskiy",
+    "email": "stargot@gmail.com"
+  },
+  "description": "Agent Skills library for Python backend development (Django/FastAPI/aiogram): audits, code review, VPS deploy, migrations, SEO, docs, harness and Obsidian skills.",
+  "plugins": [
+    {
+      "name": "llm-skills",
+      "source": "./",
+      "description": "27 Agent Skills: Django/FastAPI/aiogram audits, code review, test writing, VPS deploy, observability, incident triage, DB migration safety, Postgres performance, releases, SEO, docs, harness engineering, /goal pipeline, ratchet loop, task decomposition, context hygiene, LLM delegation, LLM features in product and Obsidian workflows.",
+      "version": "1.10.0"
+    }
+  ]
+}

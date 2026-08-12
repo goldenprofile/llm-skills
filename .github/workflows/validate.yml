@@ -1,0 +1,36 @@
+name: validate
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Полная история нужна для сравнения версий с базовым коммитом.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Сначала тесты самого валидатора: зелёная валидация от сломанного
+      # валидатора ничего не значит.
+      - name: Тесты валидатора
+        run: python scripts/test_validate_skills.py
+
+      - name: Валидация библиотеки навыков
+        run: >
+          python scripts/validate_skills.py
+          --strict
+          --check-bump
+          --base "${{ github.event.pull_request.base.sha || github.event.before }}"
+
+      - name: Метрики библиотеки
+        if: always()
+        run: python scripts/validate_skills.py --list

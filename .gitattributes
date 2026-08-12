@@ -1,0 +1,17 @@
+# Normalize line endings: store text files with LF in the repository,
+# check out with the platform-native EOL. Prevents noisy CRLF/LF diffs
+# when committing from Windows.
+* text=auto eol=lf
+
+# Markdown is the primary content of this repository.
+*.md text eol=lf diff=markdown
+
+# Explicit binary types (never normalize / never diff as text).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.svg text eol=lf
+*.pdf binary
+*.ico binary
