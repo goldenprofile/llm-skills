@@ -10,26 +10,77 @@
 
 Makefile — единый набор команд для тебя и для агента, одинаковый локально и в CI.
 
+## Канонический namespace целей — обязателен для всех проектов
+
+Один и тот же агент работает в ~16 репозиториях. Если `make check` в каждом значит своё,
+DoD «`make check` зелёный» — не контракт, а пожелание. Имена ниже обязательны; проектная
+специфика добавляется, но **не переименовывает** канон.
+
+**Атомарные цели — одна цель, один инструмент:**
+
+| Цель | Что делает | Меняет файлы |
+|------|-----------|--------------|
+| `lint` | статический анализ (ruff check) | нет |
+| `format` | форматирование (ruff format) | **да** |
+| `format-check` | то же, только проверка | нет |
+| `type` | типы (mypy/pyright/ty) | нет |
+| `test` | тесты | нет |
+| `sec` | секьюрити-сканы (ruff S, pip-audit, gitleaks) | нет |
+| `migrations-check` | Django: нет несозданных миграций | нет |
+
+**Агрегаты — их ровно два:**
+
+- `check` — **единственный блокирующий гейт**. Обязательный минимум:
+  `lint format-check type test` (+ `migrations-check` в Django). Сверху — проектные
+  добавки (шаблоны, ассеты, css) и `sec`. Жёсткий инвариант ровно один:
+  **`check` никогда не меняет файлы** — ради этого `format-check` и существует отдельно
+  от `format`. Это то, на что ссылается DoD и что форсит pre-push.
+- `sec` — существует отдельной целью **всегда**, даже когда включён в `check`:
+  перед релизом его гоняют прицельно.
+
+Сеть и сервисы — не инвариант, а свойство проекта: `sec` (pip-audit) ходит в сеть,
+в xpx.ru тестам нужны PostgreSQL и Redis. Держать `check` запускаемым на десктопе
+желательно (тесты на in-memory SQLite — так в nameregister и digital-goods-store).
+Где невозможно, гейт гоняется в CI, а в CLAUDE.md проекта прямо написано, какое
+подмножество бежит локально. Разное **имя** гейта под разное окружение запрещено:
+именно так namespace и расползается.
+
+Цель, которую в проекте сознательно сделали advisory (в xpx.ru `ty` стоит в CI
+с `continue-on-error`), в `check` не входит — иначе гейт красный по умолчанию,
+и его начинают обходить. Она остаётся отдельной целью, и причина пишется рядом.
+
+**Запрещено:** `all`, `verify`, `preflight`, `check-all` как *разные* гейты. Один проект —
+один блокирующий гейт с именем `check`. Старые имена оставлять только алиасами:
+`fmt`→`format`, `fmt-check`→`format-check`, `typecheck`→`type`, `all`→`check`.
+
+**Почему `check`, а не `all`:** по конвенции GNU `all` — «собрать», `check` — «проверить».
+У Python-проектов собирать нечего, поэтому `all` как имя гейта вводит в заблуждение.
+
+**Правило для DoD:** пункт DoD, для которого существует цель Makefile, в DoD не пишется —
+он уже внутри `check`. Проза в чек-листе остаётся только для того, что машина проверить
+не может (покрыт ли сценарий отказа, синхронизирован ли backlog, уместно ли решение).
+
 ### `Makefile` (база, общая для всех Python-проектов)
 
 ```makefile
 # подставь свой менеджер пакетов: uv run / poetry run / python -m
 RUN := uv run
 
-.PHONY: lint fmt fmt-check fix type test sec all
-lint:      ; $(RUN) ruff check .
-fmt:       ; $(RUN) ruff format .                 # ТОЛЬКО формат — без --fix (см. ниже)
-fmt-check: ; $(RUN) ruff format --check .         # CI: упасть, если не отформатировано
-fix:       ; $(RUN) ruff check --fix .            # автофикс ОТДЕЛЬНО и осознанно (см. ниже)
-type:      ; $(RUN) ty check                      # ИЛИ mypy . — выбор типизатора см. ниже
-test:      ; $(RUN) pytest -q
-sec:       ; $(RUN) ruff check --select S . && $(RUN) pip-audit
-all: lint type test sec
+.PHONY: lint format format-check fix type test sec migrations-check check
+lint:         ; $(RUN) ruff check .
+format:       ; $(RUN) ruff format .              # ТОЛЬКО формат — без --fix (см. ниже)
+format-check: ; $(RUN) ruff format --check .      # CI: упасть, если не отформатировано
+fix:          ; $(RUN) ruff check --fix .         # автофикс ОТДЕЛЬНО и осознанно (см. ниже)
+type:         ; $(RUN) ty check                   # ИЛИ mypy . — выбор типизатора см. ниже
+test:         ; $(RUN) pytest -q
+sec:          ; $(RUN) ruff check --select S . && $(RUN) pip-audit
+check: lint format-check type test   # единственный блокирующий гейт; файлы НЕ меняет
+#         + migrations-check (Django), + sec — проектные добавки поверх минимума
 ```
 
-> **Почему `fmt` без `--fix`.** `ruff check --fix` сносит «неиспользуемые» импорты (F401). В Django
+> **Почему `format` без `--fix`.** `ruff check --fix` сносит «неиспользуемые» импорты (F401). В Django
 > такой импорт часто регистрирует сигналы/админку (side-effect) — слепой автофикс ломает регистрацию.
-> Держи формат (`fmt`) и автофикс (`fix`) **раздельно**, F401 на Django-коде ревьюь руками.
+> Держи формат (`format`) и автофикс (`fix`) **раздельно**, F401 на Django-коде ревьюь руками.
 
 > **`sec` = ruff `S` + pip-audit.** Ruff нативно реализует правила bandit как `S`
 > (`ruff check --select S`) — отдельный `bandit` не нужен. `pip-audit` — supply-chain (CVE в
@@ -100,7 +151,7 @@ run-bot: ; $(RUN) python -m bot
 
 ## CI — GitHub Actions
 
-Джобы под сам код, без образов, если проект не собирает контейнер. **Не гоняй один `make all` на
+Джобы под сам код, без образов, если проект не собирает контейнер. **Не гоняй один `make check` на
 голом runner** — `test`/`sec` для
 Django/FastAPI требуют БД/Redis и упадут. Дроби джобы **по capability**: чистые проверки отдельно,
 сервис-зависимые отдельно.
@@ -120,7 +171,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6       # пинуй сторонние actions по SHA (zizmor: unpinned-uses)
       - run: uv sync --all-groups
-      - run: make lint fmt-check
+      - run: make lint format-check
       - run: make type                    # ty молодой → можно continue-on-error
         continue-on-error: true
   test:                                   # с сервисами (пример для Django)

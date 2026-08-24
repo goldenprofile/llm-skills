@@ -10,7 +10,7 @@ Symphony = автономные прогоны задач: трекер → из
 
 1. **Изоляция через git worktree** — каждая независимая задача в своём worktree, чтобы не
    мешать рабочему дереву (см. навык про worktrees, если есть).
-2. **Гейт = `make all` + навык-гейты из DoD** — тот же набор проверок, что и в обычной работе.
+2. **Гейт = `make check` + навык-гейты из DoD** — тот же набор проверок, что и в обычной работе.
 3. **Коммиты — через `git-commit-planner`**, ревью — через `change-review`.
 
 Это даёт автономию уровня 2 (агент готовит изменения, ты approve/merge) без инфраструктуры.
@@ -35,9 +35,9 @@ hooks:
     uv sync --all-extras --dev
   before_run: |
     git pull origin main
-    make all
+    make check
   after_run: |
-    make all
+    make check
     git add -A && git commit -m "auto: $ISSUE_ID"
 agent:
   max_concurrent_agents: 2   # на одной машине держи низким
@@ -54,10 +54,10 @@ agent:
 
 ### Требования
 1. Изменения в рамках одной задачи
-2. `make all` проходит (включая sec)
+2. `make check` проходит (включая sec)
 3. Затронуты миграции → прогнать migration-safety-auditor
 4. Новый код покрыт тестами
-5. Коммит: "feat/fix(scope): описание [{{ issue.identifier }}]"
+5. Коммит: "feat/fix(scope): short imperative description [{{ issue.identifier }}]"
 ```
 
 ## Ключевые концепции (для адаптации)

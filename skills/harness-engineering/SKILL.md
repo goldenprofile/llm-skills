@@ -12,7 +12,7 @@ description: >
   агентов», или хочет, чтобы правила проекта соблюдались автоматически, а не на
   память.
 metadata:
-  version: 1.7.0
+  version: 1.8.0
 ---
 
 # Harness Engineering — обвязка проекта для AI-агентов
@@ -59,11 +59,12 @@ overkill на малом потоке задач — см. [references/symphony.
    не дописывай аддитивно. Сначала **прочитай и вычисти**: машинно-специфичное → в
    `~/.claude/CLAUDE.md` или `CLAUDE.local.md`; редко нужное → в `.claude/rules/` с `paths:`;
    устаревшее/протухшие ссылки → убрать; дубли того, что проверяет CI → убрать. Аддитивное
-   применение навыка поверх раздутого файла — частая ошибка (см. Антипаттерны). Готовый список
-   кандидатов на вынос даёт `/doctor`; какие файлы реально загрузились — `/context`.
+   применение навыка поверх раздутого файла — частая ошибка (см. Антипаттерны). Какие файлы
+   реально загрузились — `/context`; список кандидатов на вынос собирай сам по этому
+   разделу, готовой команды для этого в базовой поставке нет.
 1. **Enforcement** — три уровня, от сильного к слабому:
    - **Makefile** (кросс-платформенный) + **CI**. Цели под Python-стек
-     (`lint`/`fmt`/`type`/`test`/`sec`/`all`) и под класс проекта. Полные шаблоны:
+     (`lint`/`format`/`format-check`/`type`/`test`/`sec`/`check`) и под класс проекта. Полные шаблоны:
      [references/tooling.md](references/tooling.md).
    - **Hooks** (`.claude/settings.json` → `hooks`) — enforcement, не зависящий от того, вспомнит
      ли агент про Makefile. `PreToolUse` может **заблокировать** вызов, `PostToolUse` — среагировать
@@ -91,7 +92,7 @@ overkill на малом потоке задач — см. [references/symphony.
    Частый провал: тесты вроде есть, но pytest их не собирает.
 2. **На легаси не «чини всё красное».** Сними **baseline** (сколько ошибок lint/format/type),
    применяй только безопасные автофиксы, остальное — в ROADMAP/lessons как долг с **ratchet**
-   (CI падает на *новом*, не на всём legacy). «Зелёный `make all`» на зрелом проекте — цель, а не
+   (CI падает на *новом*, не на всём legacy). «Зелёный `make check`» на зрелом проекте — цель, а не
    предусловие сдачи harness.
 3. Запиши пойманные грабли в `tasks/lessons.md`. Если создан WORKFLOW.md — проверь, что YAML парсится.
 
@@ -103,8 +104,9 @@ overkill на малом потоке задач — см. [references/symphony.
 более узкий/быстрый гейт; тяжёлые опции — opt-in, не по умолчанию.
 
 **Автоматика (CI + локально):**
-- `make all` — `lint`/`type`/`test`/`sec` зелёные. Типы прямо в сессии — **`pyright-lsp`**
-  (батч-гейт остаётся `make type`).
+- `make check` — зелёный: минимум `lint format-check type test` (+ `migrations-check` в Django),
+  плюс проектные добавки. Типы прямо в сессии — **`pyright-lsp`** (батч-гейт остаётся `make type`).
+  Канон целей — [references/tooling.md](references/tooling.md).
 
 **Перед каждым коммитом — быстрые гейты диффа:**
 - **`/code-review`** — баги уровня строк + переиспользование/упрощение (`--fix` применяет
@@ -117,8 +119,12 @@ overkill на малом потоке задач — см. [references/symphony.
   диффе, а не после каждой правки (не дублировать `/code-review`).
 - **`test-coverage-auditor`** — качество тестов (assertion'ы, моки без проверок).
 - **`migration-safety-auditor`** — если затронуты миграции, до деплоя на прод.
-- **`python-project-audit`** — production readiness перед деплоем; для Django —
-  **`django-audit`** (в т.ч. security-линза, OWASP проектного уровня).
+- **`python-project-audit`** — production readiness перед деплоем.
+- Линза по стеку — ровно одна на проект: Django → **`django-audit`** (в т.ч. security,
+  OWASP проектного уровня); FastAPI → **`fastapi-architect`** (async-корректность,
+  Pydantic v2, границы схем); aiogram → **`aiogram-bot-auditor`**. Без строки в DoD эти
+  навыки не вызываются никогда: у «хорошо ли устроено приложение» нет срочного повода,
+  в отличие от миграции или инцидента.
 
 Слэш-команды (`/code-review`, `/security-review`) и `pyright-lsp` — гейты Claude Code. В другой
 среде их роль закрывают `make sec` + навыки `change-review` / `django-audit` (security) и
@@ -131,7 +137,7 @@ overkill на малом потоке задач — см. [references/symphony.
 ## Чеклист готовности
 
 **Базовый harness (обязательно):**
-- [ ] `Makefile` с целями `lint/fmt/type/test/sec/all` + цели класса проекта
+- [ ] `Makefile` с целями `lint/format/format-check/type/test/sec/check` + цели класса проекта
 - [ ] CI (GitHub Actions): джобы по capability — `lint`+`type` (без сервисов), `test`
       (с Postgres/Redis), `sec`; safe-by-default до настройки секретов; actions пиннятся по SHA
 - [ ] `.claude/settings.json` — `permissions.allow` на `make`/`uv run` + хук `PostToolUse`
@@ -169,7 +175,7 @@ overkill на малом потоке задач — см. [references/symphony.
 - НЕ делай `permissions.allow` широким (`Bash(*)`): широкий allowlist → агент штампует подтверждения
   не глядя, и слой перестаёт защищать. Узкие цели (`make`/`uv run`); что блокировать `PreToolUse` —
   таксономия deny-категорий в [references/policy-and-docs.md](references/policy-and-docs.md).
-- НЕ вешай `ruff check --fix` на общий `fmt`: в Django «неиспользуемый» импорт часто регистрирует
+- НЕ вешай `ruff check --fix` на общий `format`: в Django «неиспользуемый» импорт часто регистрирует
   сигналы/админку (side-effect) — слепой автофикс их сносит. Формат и автофикс — раздельно.
 - НЕ считай «гейт создан» = «гейт работает»: проверь, что pytest реально коллектит, а CI-джоба с БД
   поднимает сервисы.
@@ -178,7 +184,7 @@ overkill на малом потоке задач — см. [references/symphony.
 
 ```
 Уровень 0: агент пишет код, ты проверяешь всё вручную
-Уровень 1: harness → make all + навык-гейты проверяют автоматически, ты ревьюишь дифф
+Уровень 1: harness → make check + навык-гейты проверяют автоматически, ты ревьюишь дифф
 Уровень 2: Symphony → агент сам берёт задачи и готовит коммиты, ты approve/merge
 Уровень 3: full auto в доверенной среде (обычно избыточно для соло)
 ```

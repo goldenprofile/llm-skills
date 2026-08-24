@@ -93,7 +93,7 @@ Claude Code читает `CLAUDE.md` и **не читает** `AGENTS.md`; OpenC
 ```jsonc
 {
   "permissions": {
-    "allow": ["Bash(make lint:*)", "Bash(make fmt-check:*)", "Bash(make type:*)", "Bash(uv run:*)"]
+    "allow": ["Bash(make lint:*)", "Bash(make format-check:*)", "Bash(make type:*)", "Bash(uv run:*)"]
   },
   "hooks": {
     "PostToolUse": [
@@ -146,7 +146,7 @@ Claude Code читает `CLAUDE.md` и **не читает** `AGENTS.md`; OpenC
 # <Проект> — заметки для агента
 
 ## Tooling
-make lint | make fmt | make type | make test | make sec | make all
+make lint | make format | make type | make test | make sec | make check
 (make кросс-платформенный)
 В сессии: pyright-lsp (типы) · /code-review + /security-review (быстрые гейты диффа)
 
@@ -157,7 +157,7 @@ make lint | make fmt | make type | make test | make sec | make all
 - <короткие проверяемые запреты под конкретный проект>
 
 ## Definition of Done
-Автоматика: make all — зелёный (lint, type, test, sec); типы в сессии — pyright-lsp.
+Автоматика: make check — зелёный (lint, type, test, sec); типы в сессии — pyright-lsp.
 
 Перед каждым коммитом (быстрые гейты диффа):
 1. /code-review — баги + переиспользование/упрощение (--fix применяет правки)
