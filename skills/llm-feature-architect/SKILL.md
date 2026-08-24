@@ -14,7 +14,7 @@ description: >
   нестабильный JSON от модели. Актуальные ID моделей и цены Anthropic — навык
   claude-api; выбор «делать самому или агентом» в разработке — agent-workflow.
 metadata:
-  version: 1.1.0
+  version: 1.1.1
 ---
 
 # LLM Feature Architect
@@ -90,4 +90,4 @@ LLM в продукте — это внешняя зависимость с не
 
 ## Границы навыка
 
-Актуальные ID моделей, цены, детали Anthropic API — встроенный навык claude-api. Надёжность исходящих HTTP-вызовов как таковая (circuit breaker, идемпотентность) — общая тема, см. ROADMAP `http-client-reliability`. Решение «делать руками или агентом» в процессе разработки — agent-workflow. Аудит очередей/Celery — django-audit; асинхронная корректность FastAPI — fastapi-architect.
+Актуальные ID моделей, цены, детали Anthropic API — встроенный навык claude-api. Надёжность исходящих HTTP-вызовов как таковая (circuit breaker, идемпотентность) — общая тема, отдельного навыка в библиотеке пока нет (кандидат — в GitHub Issues репозитория). Решение «делать руками или агентом» в процессе разработки — agent-workflow. Аудит очередей/Celery — django-audit; асинхронная корректность FastAPI — fastapi-architect.

@@ -1,7 +1,7 @@
 {
   "name": "llm-skills",
-  "version": "1.11.0",
-  "description": "Agent Skills for Python backend development: Django/FastAPI/aiogram audits, code review, VPS deploy, DB migration safety, SEO, docs generation, harness engineering, task decomposition, context hygiene, LLM delegation, LLM feature design and Obsidian workflows.",
+  "version": "1.13.0",
+  "description": "Agent Skills for Python backend development: Django/FastAPI/aiogram audits, code review, VPS deploy, DB migration safety, SEO, docs generation, virtual team coordinator (sage), harness engineering, task decomposition, context hygiene, LLM delegation, LLM feature design and Obsidian workflows.",
   "author": {
     "name": "Ivan Sinyavskiy",
     "email": "stargot@gmail.com"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/goldenprofile/llm-skills",
   "repository": "https://github.com/goldenprofile/llm-skills",
   "license": "MIT",
-  "skills": ["./"]
+  "skills": ["./skills"]
 }

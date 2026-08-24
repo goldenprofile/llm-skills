@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/format-SKILL.md-success.svg)](#формат-навыка)
-[![Skills: 27](https://img.shields.io/badge/skills-27-informational.svg)](#каталог-навыков)
+[![Skills: 28](https://img.shields.io/badge/skills-28-informational.svg)](#каталог-навыков)
 
 Коллекция переиспользуемых **агентских навыков** (Agent Skills) для LLM-ассистентов
 программирования — прежде всего [Claude Code](https://docs.claude.com/en/docs/claude-code),
@@ -51,12 +51,13 @@
 |------------|-----------|-----------------|
 | **Claude Code** | нативная | `~/.claude/skills/` (глобально) или `.claude/skills/` (в проекте) |
 | **OpenCode** | нативная, в т.ч. чтение Claude-совместимых путей | `~/.config/opencode/skills/`, `.opencode/skills/`, а также `~/.claude/skills/` и `.claude/skills/` |
+| **Другие CLI** (Grok, Codex, Cursor, Hermes, …) | формат [Agent Skills](https://agentskills.io) | каталог навыков инструмента: `~/.grok/skills/`, `~/.agents/skills/`, `~/.cursor/skills/`, `~/.hermes/skills/` (и проектные `.grok/skills/`, `.agents/skills/`, `.cursor/skills/`) |
 
 > OpenCode умеет читать навыки напрямую из каталогов Claude Code, поэтому одна установка
 > в `~/.claude/skills/` делает навыки доступными сразу в обоих инструментах.
 
-Формат `SKILL.md` совместим с экосистемой Anthropic Agent Skills, поэтому навыки можно
-использовать и в других средах, поддерживающих этот стандарт.
+Формат `SKILL.md` — открытый стандарт Agent Skills: одна папка навыка копируется
+в каталог соответствующего CLI без правок содержимого.
 
 ---
 
@@ -87,18 +88,18 @@ cd llm-skills
 ```bash
 # Linux / macOS
 mkdir -p ~/.claude/skills
-cp -r django-audit change-review vps-ops ~/.claude/skills/
+cp -r skills/django-audit skills/change-review skills/vps-ops ~/.claude/skills/
 ```
 
 ```powershell
 # Windows (PowerShell)
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
-Copy-Item -Recurse django-audit, change-review, vps-ops "$HOME\.claude\skills\"
+Copy-Item -Recurse skills/django-audit, skills/change-review, skills/vps-ops "$HOME\.claude\skills\"
 ```
 
 ### Вариант 2. Установить отдельный навык
 
-Скопируйте одну папку навыка целиком (вместе с её `references/`, если есть) в каталог
+Скопируйте одну папку из `skills/<имя>/` целиком (вместе с её `references/`, если есть) в каталог
 навыков. Имя папки должно совпадать с полем `name` во фронтматтере.
 
 ### Вариант 3. Навыки уровня проекта
@@ -117,93 +118,94 @@ Copy-Item -Recurse django-audit, change-review, vps-ops "$HOME\.claude\skills\"
 
 | Навык | Назначение |
 |-------|------------|
-| [`advanced-seo-optimizer`](advanced-seo-optimizer/) | Глубокий технический SEO-аудит Django и FastAPI (Jinja2): семантика, meta/OG, Schema.org JSON-LD, robots/sitemap, hreflang, Core Web Vitals, AI-краулеры и llms.txt. |
-| [`django-audit`](django-audit/) | Комплексный аудит Django по линзам: архитектура, безопасность (OWASP), Celery, чистота кода, техдолг, готовность к деплою, тесты. |
-| [`django-tailwind-optimizer`](django-tailwind-optimizer/) | Анализ Django-шаблонов на Tailwind CSS: дублирование стилей, переход с CDN на production-сборку. |
+| [`advanced-seo-optimizer`](skills/advanced-seo-optimizer/) | Глубокий технический SEO-аудит Django и FastAPI (Jinja2): семантика, meta/OG, Schema.org JSON-LD, robots/sitemap, hreflang, Core Web Vitals, AI-краулеры и llms.txt. |
+| [`django-audit`](skills/django-audit/) | Комплексный аудит Django по линзам: архитектура, безопасность (OWASP), Celery, чистота кода, техдолг, готовность к деплою, тесты. |
+| [`django-tailwind-optimizer`](skills/django-tailwind-optimizer/) | Анализ Django-шаблонов на Tailwind CSS: дублирование стилей, переход с CDN на production-сборку. |
 
 ### FastAPI
 
 | Навык | Назначение |
 |-------|------------|
-| [`fastapi-architect`](fastapi-architect/) | Проектирование и ревью FastAPI: структура (APIRouter, lifespan, pydantic-settings), Pydantic v2, async-корректность (блокировка event loop, SQLAlchemy 2.x async), DI, тесты (httpx + dependency_overrides). |
+| [`fastapi-architect`](skills/fastapi-architect/) | Проектирование и ревью FastAPI: структура (APIRouter, lifespan, pydantic-settings), Pydantic v2, async-корректность (блокировка event loop, SQLAlchemy 2.x async), DI, тесты (httpx + dependency_overrides). |
 
 ### База данных и миграции
 
 | Навык | Назначение |
 |-------|------------|
-| [`migration-safety-auditor`](migration-safety-auditor/) | Аудит безопасности миграций БД (Django + Alembic) перед прод-деплоем: блокировки таблиц, downtime, потеря данных, обратная совместимость при zero-downtime, опасный backfill. Postgres и SQLite. |
-| [`postgres-performance`](postgres-performance/) | Диагностика и тюнинг производительности PostgreSQL: EXPLAIN ANALYZE, индексы, pg_stat_statements, pgbouncer, autovacuum, память VPS. |
+| [`migration-safety-auditor`](skills/migration-safety-auditor/) | Аудит безопасности миграций БД (Django + Alembic) перед прод-деплоем: блокировки таблиц, downtime, потеря данных, обратная совместимость при zero-downtime, опасный backfill. Postgres и SQLite. |
+| [`postgres-performance`](skills/postgres-performance/) | Диагностика и тюнинг производительности PostgreSQL: EXPLAIN ANALYZE, индексы, pg_stat_statements, pgbouncer, autovacuum, память VPS. |
 
 ### Python и качество кода
 
 | Навык | Назначение |
 |-------|------------|
-| [`python-project-audit`](python-project-audit/) | Проверка заявленной готовности против фактической: незавершённый код, критические проблемы, мёртвые куски. Статанализ (pylint, bandit, mypy, radon, vulture) + ручной review, отчёт с баллами и вердиктом. |
-| [`test-writer`](test-writer/) | Написание тестов (pytest-first): стратегия покрытия, дизайн кейсов, фикстуры/фабрики, паттерны Django/FastAPI/aiogram. |
-| [`test-coverage-auditor`](test-coverage-auditor/) | Аудит качества тестов Python/Django: тесты без assertions, моки без проверок, непокрытый критический код, skip без причины. |
-| [`change-review`](change-review/) | Глубокий разбор ОДНОГО изменения с вердиктом APPROVE / REQUEST CHANGES и шкалой критичности. Режимы: **self** (силами Claude — корректность, безопасность, надёжность, границы слоёв) и **second-opinion** (другая модель через CLI `hermes`: галлюцинации API, edge cases, over-engineering). |
-| [`dependency-auditor`](dependency-auditor/) | Аудит зависимостей и supply-chain Python: pip-audit/safety и CVE, пиннинг и lockfiles (uv/poetry/pip-tools), безопасные апгрейды с разбором breaking changes. |
+| [`python-project-audit`](skills/python-project-audit/) | Проверка заявленной готовности против фактической: незавершённый код, критические проблемы, мёртвые куски. Статанализ (pylint, bandit, mypy, radon, vulture) + ручной review, отчёт с баллами и вердиктом. |
+| [`test-writer`](skills/test-writer/) | Написание тестов (pytest-first): стратегия покрытия, дизайн кейсов, фикстуры/фабрики, паттерны Django/FastAPI/aiogram. |
+| [`test-coverage-auditor`](skills/test-coverage-auditor/) | Аудит качества тестов Python/Django: тесты без assertions, моки без проверок, непокрытый критический код, skip без причины. |
+| [`change-review`](skills/change-review/) | Глубокий разбор ОДНОГО изменения с вердиктом APPROVE / REQUEST CHANGES и шкалой критичности. Режимы: **self** (силами Claude — корректность, безопасность, надёжность, границы слоёв) и **second-opinion** (другая модель через CLI `hermes`: галлюцинации API, edge cases, over-engineering). |
+| [`dependency-auditor`](skills/dependency-auditor/) | Аудит зависимостей и supply-chain Python: pip-audit/safety и CVE, пиннинг и lockfiles (uv/poetry/pip-tools), безопасные апгрейды с разбором breaking changes. |
 
 ### Telegram-боты (aiogram)
 
 | Навык | Назначение |
 |-------|------------|
-| [`aiogram-bot-auditor`](aiogram-bot-auditor/) | Аудит и помощь по ботам на aiogram 3.x: надёжность Telegram API (flood-control 429, блокировки, single instance), архитектура (Router/middlewares/FSM), деплой (polling под systemd, webhook+nginx, RedisStorage) и тесты. |
+| [`aiogram-bot-auditor`](skills/aiogram-bot-auditor/) | Аудит и помощь по ботам на aiogram 3.x: надёжность Telegram API (flood-control 429, блокировки, single instance), архитектура (Router/middlewares/FSM), деплой (polling под systemd, webhook+nginx, RedisStorage) и тесты. |
 
 ### Деплой и инфраструктура
 
 | Навык | Назначение |
 |-------|------------|
-| [`vps-ops`](vps-ops/) | Эксплуатация на VPS без Docker (nginx + systemd + postgres + redis) в трёх режимах: **deploy** (конфиги и аудит деплоя), **observe** (Sentry, healthcheck, логи, алерты), **triage** (runbook инцидента: 502/504, рестарт-луп, диск, postgres). |
+| [`vps-ops`](skills/vps-ops/) | Эксплуатация на VPS без Docker (nginx + systemd + postgres + redis) в трёх режимах: **deploy** (конфиги и аудит деплоя), **observe** (Sentry, healthcheck, логи, алерты), **triage** (runbook инцидента: 502/504, рестарт-луп, диск, postgres). |
 
 ### Анализ кодовой базы
 
 | Навык | Назначение |
 |-------|------------|
-| [`codebase-recon`](codebase-recon/) | Разведка кодовой базы в двух режимах: **whole** (незнакомый проект целиком — стек, точки входа, потоки данных, бизнес-цель) и **subject** (одна область или фича адресно, с gap-анализом «текущее против желаемого»). Только чтение. |
+| [`codebase-recon`](skills/codebase-recon/) | Разведка кодовой базы в двух режимах: **whole** (незнакомый проект целиком — стек, точки входа, потоки данных, бизнес-цель) и **subject** (одна область или фича адресно, с gap-анализом «текущее против желаемого»). Только чтение. |
 
 ### Рабочий процесс агента
 
 | Навык | Назначение |
 |-------|------------|
-| [`agent-workflow`](agent-workflow/) | Работа с самим агентом в пяти режимах: **delegate** (сам или агент, какой режим и модель), **decompose** (разбить задачу на куски в один заход), **prompt** (из разговорного описания в однозначное задание), **context** (деградация сессии, слои знания, чек-лист CLAUDE.md), **audit** (ретроспектива: повторяющиеся ошибки, протухшая документация, guardrails). |
-| [`git-commit-planner`](git-commit-planner/) | Разбор изменений в git и план логических атомарных коммитов вместо одного монолитного. |
-| [`release-manager`](release-manager/) | Релизы: semver по диффу, CHANGELOG из Conventional Commits, git-теги и GitHub Releases, пре-релизный чеклист и smoke. |
-| [`session-catchup`](session-catchup/) | Возобновление прерванной сессии: восстановление контекста из git, файлов состояния и истории диалога. |
-| [`harness-engineering`](harness-engineering/) | Обвязка Python-проекта для AI-агентов: Makefile, CI (GitHub Actions), `ARCHITECTURE.md`, синхронизация `CLAUDE.md`/`AGENTS.md`, а Definition of Done вызывает остальные навыки библиотеки. Деплой systemd/nginx, Symphony опционально. |
-| [`goal-pipeline`](goal-pipeline/) | Минимальный планировщик-исполнитель поверх нативной `/goal` Claude Code: лёгкий recon, разбивка brownfield-задачи на фазы с измеримыми критериями, вшитые гейты toolkit по типу фазы (migration-safety-auditor, /code-review, pyright, test-coverage-auditor), одна готовая строка `/goal`, аудит против исходного плана. Профили автономности с чекпоинтом на рискованных фазах. |
-| [`ratchet-loop`](ratchet-loop/) | In-session петля-храповик: тянет ОДИН измеримый скаляр (latency, число SQL-запросов, размер бандла, pass-rate) до упора — оставляет только улучшившие изменения, остальное откатывает через git. Замороженный оценщик (anti-Goodhart) + независимый verifier-проход; сама не терминируется, крутится до бюджета/плато. |
+| [`agent-workflow`](skills/agent-workflow/) | Работа с самим агентом в пяти режимах: **delegate** (сам или агент, какой режим и модель), **decompose** (разбить задачу на куски в один заход), **prompt** (из разговорного описания в однозначное задание), **context** (деградация сессии, слои знания, чек-лист CLAUDE.md), **audit** (ретроспектива: повторяющиеся ошибки, протухшая документация, guardrails). |
+| [`git-commit-planner`](skills/git-commit-planner/) | Разбор изменений в git и план логических атомарных коммитов вместо одного монолитного. |
+| [`release-manager`](skills/release-manager/) | Релизы: semver по диффу, CHANGELOG из Conventional Commits, git-теги и GitHub Releases, пре-релизный чеклист и smoke. |
+| [`session-catchup`](skills/session-catchup/) | Возобновление прерванной сессии: восстановление контекста из git, файлов состояния и истории диалога. |
+| [`harness-engineering`](skills/harness-engineering/) | Обвязка Python-проекта для AI-агентов: Makefile, CI (GitHub Actions), `ARCHITECTURE.md`, синхронизация `CLAUDE.md`/`AGENTS.md`, а Definition of Done вызывает остальные навыки библиотеки. Деплой systemd/nginx, Symphony опционально. |
+| [`goal-pipeline`](skills/goal-pipeline/) | Минимальный планировщик-исполнитель поверх нативной `/goal` Claude Code: лёгкий recon, разбивка brownfield-задачи на фазы с измеримыми критериями, вшитые гейты toolkit по типу фазы (migration-safety-auditor, /code-review, pyright, test-coverage-auditor), одна готовая строка `/goal`, аудит против исходного плана. Профили автономности с чекпоинтом на рискованных фазах. |
+| [`ratchet-loop`](skills/ratchet-loop/) | In-session петля-храповик: тянет ОДИН измеримый скаляр (latency, число SQL-запросов, размер бандла, pass-rate) до упора — оставляет только улучшившие изменения, остальное откатывает через git. Замороженный оценщик (anti-Goodhart) + независимый verifier-проход; сама не терминируется, крутится до бюджета/плато. |
 
 ### LLM в продукте
 
 | Навык | Назначение |
 |-------|------------|
-| [`llm-feature-architect`](llm-feature-architect/) | Проектирование и ревью LLM-фич в продукте (Django/FastAPI/aiogram): форма задачи и модель, сервис-обёртка с ретраями и очередью, structured output + pydantic, контроль стоимости, evals на золотом наборе, prompt injection и PII. |
+| [`llm-feature-architect`](skills/llm-feature-architect/) | Проектирование и ревью LLM-фич в продукте (Django/FastAPI/aiogram): форма задачи и модель, сервис-обёртка с ретраями и очередью, structured output + pydantic, контроль стоимости, evals на золотом наборе, prompt injection и PII. |
 
 ### Документация
 
 | Навык | Назначение |
 |-------|------------|
-| [`docs-generator`](docs-generator/) | Документация: README, ADR, docstrings (Google style) и синхронизация `CLAUDE.md`/`AGENTS.md`. Генерация недостающего и аудит устаревшего. |
-| [`spec-writer`](spec-writer/) | Проектные документы в трёх режимах: spec (техспецификация: проблема, цели, архитектура, ADR-решения, риски), plan (фазы, оценки, зависимости) и brief (аналитическая записка для руководства, без кода). |
+| [`docs-generator`](skills/docs-generator/) | Документация: README, ADR, docstrings (Google style) и синхронизация `CLAUDE.md`/`AGENTS.md`. Генерация недостающего и аудит устаревшего. |
+| [`sage`](skills/sage/) | Координатор виртуальной команды: сырой вход (черновик, пост, схема) → пакет документов (summary, discussion, design/runbook). Не один spec. |
+| [`spec-writer`](skills/spec-writer/) | Проектные документы в трёх режимах: spec (техспецификация: проблема, цели, архитектура, ADR-решения, риски), plan (фазы, оценки, зависимости) и brief (аналитическая записка для руководства, без кода). |
 
 ### Заметки и знания
 
 | Навык | Назначение |
 |-------|------------|
-| [`obsidian`](obsidian/) | Работа с хранилищем Obsidian (filesystem-first): клиппинги, проектные задачи со статусами, ADR, дневник, бриф проекта, синтез исследований, ревью и анализ графа тегов/ссылок. |
+| [`obsidian`](skills/obsidian/) | Работа с хранилищем Obsidian (filesystem-first): клиппинги, проектные задачи со статусами, ADR, дневник, бриф проекта, синтез исследований, ревью и анализ графа тегов/ссылок. |
 
 ### SEO и контент
 
 | Навык | Назначение |
 |-------|------------|
-| [`google-discover-optimize`](google-discover-optimize/) | Аудит и оптимизация статей под Google Discover: изображения, E-E-A-T, NewsArticle JSON-LD, мобильные Core Web Vitals. |
+| [`google-discover-optimize`](skills/google-discover-optimize/) | Аудит и оптимизация статей под Google Discover: изображения, E-E-A-T, NewsArticle JSON-LD, мобильные Core Web Vitals. |
 
 ### Исследование и факты
 
 | Навык | Назначение |
 |-------|------------|
-| [`fact-checker`](fact-checker/) | Систематическая проверка фактов и выявление дезинформации с обязательной верификацией источников через веб-поиск. |
+| [`fact-checker`](skills/fact-checker/) | Систематическая проверка фактов и выявление дезинформации с обязательной верификацией источников через веб-поиск. |
 
 ---
 
@@ -246,42 +248,42 @@ description: >
 .
 ├── .claude-plugin/     # манифесты плагина (plugin.json, marketplace.json)
 ├── .github/workflows/  # CI: валидация библиотеки на push и pull request
-├── advanced-seo-optimizer/
-├── agent-workflow/
-├── aiogram-bot-auditor/
-├── change-review/
-├── codebase-recon/
-├── dependency-auditor/
-├── django-audit/
-├── django-tailwind-optimizer/
-├── docs-generator/
 ├── evals/              # роутинг-eval: запрос → ожидаемый навык
-├── fact-checker/
-├── fastapi-architect/
-├── git-commit-planner/
-├── goal-pipeline/
-├── google-discover-optimize/
-├── harness-engineering/
-├── llm-feature-architect/
-├── migration-safety-auditor/
-├── obsidian/
-├── postgres-performance/
-├── python-project-audit/
-├── ratchet-loop/
-├── release-manager/
 ├── scripts/            # валидатор, его тесты и прогон eval (stdlib, без venv)
-├── session-catchup/
-├── spec-writer/
-├── change-review/
-├── test-coverage-auditor/
-├── test-writer/
-├── vps-ops/
+├── skills/
+│   ├── advanced-seo-optimizer/
+│   ├── agent-workflow/
+│   ├── aiogram-bot-auditor/
+│   ├── change-review/
+│   ├── codebase-recon/
+│   ├── dependency-auditor/
+│   ├── django-audit/
+│   ├── django-tailwind-optimizer/
+│   ├── docs-generator/
+│   ├── fact-checker/
+│   ├── fastapi-architect/
+│   ├── git-commit-planner/
+│   ├── goal-pipeline/
+│   ├── google-discover-optimize/
+│   ├── harness-engineering/
+│   ├── llm-feature-architect/
+│   ├── migration-safety-auditor/
+│   ├── obsidian/
+│   ├── postgres-performance/
+│   ├── python-project-audit/
+│   ├── ratchet-loop/
+│   ├── release-manager/
+│   ├── sage/
+│   ├── session-catchup/
+│   ├── spec-writer/
+│   ├── test-coverage-auditor/
+│   ├── test-writer/
+│   └── vps-ops/
 ├── .gitattributes      # нормализация переводов строк (LF)
 ├── .gitignore
 ├── CLAUDE.md           # контракт репозитория для агента
 ├── LICENSE
 ├── README.md
-└── ROADMAP.md          # кандидаты в новые навыки
 ```
 
 ---

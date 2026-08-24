@@ -180,16 +180,19 @@ def read(path: str) -> str:
 
 
 def discover_skills(repo: str) -> list[str]:
+    root = os.path.join(repo, "skills")
+    if not os.path.isdir(root):
+        return []
     return sorted(
-        d for d in os.listdir(repo)
-        if os.path.isfile(os.path.join(repo, d, "SKILL.md"))
+        d for d in os.listdir(root)
+        if os.path.isfile(os.path.join(root, d, "SKILL.md"))
     )
 
 
 # --- проверки навыка -------------------------------------------------------
 
 def check_skill(repo: str, skill: str, rep: Report) -> dict:
-    skill_dir = os.path.join(repo, skill)
+    skill_dir = os.path.join(repo, "skills", skill)
     text = read(os.path.join(skill_dir, "SKILL.md"))
     fm, body, fm_errors = parse_frontmatter(text)
     for err in fm_errors:
@@ -276,7 +279,7 @@ def check_skill(repo: str, skill: str, rep: Report) -> dict:
 
 
 def check_references(repo: str, skill: str, rep: Report) -> None:
-    skill_dir = os.path.join(repo, skill)
+    skill_dir = os.path.join(repo, "skills", skill)
     mentioned: set[str] = set()
     for dirpath, _, files in os.walk(skill_dir):
         for fname in files:
@@ -323,15 +326,15 @@ def check_privacy(repo: str, rep: Report) -> None:
 
 def check_portability(repo: str, skills: list[str], rep: Report) -> None:
     """Ищет привязку инструкций к ОС, оболочке и размеру команды пользователя."""
-    targets = [f"{s}/SKILL.md" for s in skills if s not in PORTABILITY_EXEMPT]
+    targets = [f"skills/{s}/SKILL.md" for s in skills if s not in PORTABILITY_EXEMPT]
     for skill in skills:
         if skill in PORTABILITY_EXEMPT:
             continue
-        refs = os.path.join(repo, skill, "references")
+        refs = os.path.join(repo, "skills", skill, "references")
         if os.path.isdir(refs):
-            targets += [f"{skill}/references/{f}" for f in sorted(os.listdir(refs))
+            targets += [f"skills/{skill}/references/{f}" for f in sorted(os.listdir(refs))
                         if f.endswith(".md")]
-    targets += ["README.md", "ROADMAP.md"]
+    targets += ["README.md"]
 
     for rel in targets:
         path = os.path.join(repo, rel.replace("/", os.sep))
@@ -348,8 +351,19 @@ def check_portability(repo: str, skills: list[str], rep: Report) -> None:
 def check_readme(repo: str, skills: list[str], rep: Report) -> None:
     readme = read(os.path.join(repo, "README.md"))
 
-    catalogue = set(re.findall(r"\[`([\w\-]+)`\]\(\1/\)", readme))
-    tree = {a or b for a, b in re.findall(r"^(?:├|└)── ([\w\-]+)/$|^│?\s*(?:├|└)── ([\w\-]+)/", readme, re.M)}
+    catalogue = set(re.findall(r"\[`([\w\-]+)`\]\(skills/\1/\)", readme))
+    tree: set[str] = set()
+    in_skills = False
+    for line in readme.splitlines():
+        if re.match(r"^(?:├|└)── skills/$", line):
+            in_skills = True
+            continue
+        if in_skills:
+            m = re.match(r"^│\s+(?:├|└)── ([\w\-]+)/$", line)
+            if m:
+                tree.add(m.group(1))
+            else:
+                in_skills = False
     for skill in skills:
         if skill not in catalogue:
             rep.error("README.md", f"навык `{skill}` отсутствует в каталоге")
@@ -464,7 +478,8 @@ def check_bump(repo: str, skills: list[str], base: str | None, rep: Report) -> N
         return
 
     changed = [p for p in out.splitlines() if p]
-    touched = {p.split("/", 1)[0] for p in changed if "/" in p} & set(skills)
+    touched = {p.split("/")[1] for p in changed
+               if p.startswith("skills/") and p.count("/") >= 2} & set(skills)
     if not touched:
         return
 
@@ -477,13 +492,13 @@ def check_bump(repo: str, skills: list[str], base: str | None, rep: Report) -> N
                                  f"не увидит обновление")
 
     for skill in sorted(touched):
-        rel = f"{skill}/SKILL.md"
+        rel = f"skills/{skill}/SKILL.md"
         if rel not in changed:
             continue  # менялись только references — бамп на усмотрение автора
         before = version_at(repo, resolved, rel)
         if before is None:
             continue  # новый навык
-        fm, _, _ = parse_frontmatter(read(os.path.join(repo, skill, "SKILL.md")))
+        fm, _, _ = parse_frontmatter(read(os.path.join(repo, "skills", skill, "SKILL.md")))
         meta = fm.get("metadata")
         after = meta.get("version") if isinstance(meta, dict) else None
         if before == after:
@@ -516,7 +531,7 @@ def main() -> int:
 
     skills = discover_skills(REPO)
     if not skills:
-        print("не найдено ни одного навыка — запусти из корня репозитория", file=sys.stderr)
+        print("не найдено ни одного навыка в skills/ — запусти из корня репозитория", file=sys.stderr)
         return 1
 
     rep = Report()

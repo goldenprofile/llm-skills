@@ -74,8 +74,9 @@ def edit(work: str, rel: str, fn) -> None:
 
 
 def skills_of(work: str) -> list[str]:
-    return sorted(d for d in os.listdir(work)
-                  if os.path.isfile(os.path.join(work, d, "SKILL.md")))
+    root = os.path.join(work, "skills")
+    return sorted(d for d in os.listdir(root)
+                  if os.path.isfile(os.path.join(root, d, "SKILL.md")))
 
 
 def plugin_version(work: str) -> str:
@@ -84,7 +85,7 @@ def plugin_version(work: str) -> str:
 
 
 def skill_version(work: str, skill: str) -> str:
-    with open(os.path.join(work, skill, "SKILL.md"), encoding="utf-8") as fh:
+    with open(os.path.join(work, "skills", skill, "SKILL.md"), encoding="utf-8") as fh:
         return re.search(r"^\s*version:\s*(\S+)$", fh.read(), re.M).group(1)
 
 
@@ -103,7 +104,7 @@ def _(work):
     skill = skills_of(work)[0]
     long_desc = ("description: >\n  " + "очень длинное описание навыка " * 40
                  + "\n  Используй когда прогоняешь тесты валидатора.\n")
-    edit(work, f"{skill}/SKILL.md",
+    edit(work, f"skills/{skill}/SKILL.md",
          lambda t: re.sub(r"^description:.*?(?=^metadata:)", long_desc, t,
                           count=1, flags=re.S | re.M))
 
@@ -111,26 +112,26 @@ def _(work):
 @mutation("name не совпадает с папкой", needle="не совпадает с именем папки")
 def _(work):
     skill = skills_of(work)[0]
-    edit(work, f"{skill}/SKILL.md", lambda t: t.replace(f"name: {skill}", "name: wrong-name", 1))
+    edit(work, f"skills/{skill}/SKILL.md", lambda t: t.replace(f"name: {skill}", "name: wrong-name", 1))
 
 
 @mutation("посторонний ключ фронтматтера", needle="неизвестный ключ фронтматтера")
 def _(work):
     skill = skills_of(work)[0]
-    edit(work, f"{skill}/SKILL.md", lambda t: t.replace("\nmetadata:", "\nauthor: someone\nmetadata:", 1))
+    edit(work, f"skills/{skill}/SKILL.md", lambda t: t.replace("\nmetadata:", "\nauthor: someone\nmetadata:", 1))
 
 
 @mutation("посторонний ключ metadata", needle="неизвестный ключ metadata")
 def _(work):
     skill = skills_of(work)[0]
-    edit(work, f"{skill}/SKILL.md", lambda t: t.replace("\nmetadata:", "\nmetadata:\n  owner: me", 1))
+    edit(work, f"skills/{skill}/SKILL.md", lambda t: t.replace("\nmetadata:", "\nmetadata:\n  owner: me", 1))
 
 
 @mutation("версия не semver", needle="не semver")
 def _(work):
     skill = skills_of(work)[0]
     current = skill_version(work, skill)
-    edit(work, f"{skill}/SKILL.md", lambda t: t.replace(f"version: {current}", "version: 1.2", 1))
+    edit(work, f"skills/{skill}/SKILL.md", lambda t: t.replace(f"version: {current}", "version: 1.2", 1))
 
 
 @mutation("личный путь с логином в навыке", needle="домашний путь с логином")
@@ -138,14 +139,14 @@ def _(work):
     # Путь собирается из частей: иначе сам файл теста попадёт под эту же проверку.
     leak = "C:" + chr(92) + "Users" + chr(92) + "vasiliy" + chr(92) + "notes"
     skill = skills_of(work)[0]
-    edit(work, f"{skill}/SKILL.md", lambda t: t + f"\nПример: положи файл в {leak}\n")
+    edit(work, f"skills/{skill}/SKILL.md", lambda t: t + f"\nПример: положи файл в {leak}\n")
 
 
 @mutation("привязка инструкции к ОС пользователя", level="WARN",
           needle="утверждение о среде пользователя")
 def _(work):
     skill = skills_of(work)[0]
-    edit(work, f"{skill}/SKILL.md",
+    edit(work, f"skills/{skill}/SKILL.md",
          lambda t: t + "\nМашина пользователя — Windows/PowerShell, команды под неё.\n")
 
 
@@ -153,7 +154,7 @@ def _(work):
           needle="размер команды подан как данность")
 def _(work):
     skill = skills_of(work)[0]
-    edit(work, f"{skill}/SKILL.md",
+    edit(work, f"skills/{skill}/SKILL.md",
          lambda t: t + "\nПрофиль владельца — соло-разработчик с агентами.\n")
 
 
@@ -162,7 +163,7 @@ def _(work):
     skill = skills_of(work)[0]
     broken = ("description: >\n  Навык про сервер, подробности смотри в vps-\n"
               "  ops и рядом. Используй когда тестируешь валидатор.\n")
-    edit(work, f"{skill}/SKILL.md",
+    edit(work, f"skills/{skill}/SKILL.md",
          lambda t: re.sub(r"^description:.*?(?=^metadata:)", broken, t,
                           count=1, flags=re.S | re.M))
 
@@ -170,7 +171,7 @@ def _(work):
 @mutation("описание без условий срабатывания", level="WARN", needle="нет условий срабатывания")
 def _(work):
     skill = skills_of(work)[0]
-    edit(work, f"{skill}/SKILL.md",
+    edit(work, f"skills/{skill}/SKILL.md",
          lambda t: re.sub(r"^description:.*?(?=^metadata:)", "description: Делает нечто полезное.\n",
                           t, count=1, flags=re.S | re.M))
 
@@ -180,7 +181,7 @@ def _(work):
 @mutation("битая ссылка на references/", needle="отсутствующий")
 def _(work):
     for skill in skills_of(work):
-        refs = os.path.join(work, skill, "references")
+        refs = os.path.join(work, "skills", skill, "references")
         if os.path.isdir(refs):
             files = sorted(os.listdir(refs))
             if files:
@@ -192,7 +193,7 @@ def _(work):
 @mutation("осиротевший файл в references/", level="WARN", needle="осиротевший")
 def _(work):
     for skill in skills_of(work):
-        refs = os.path.join(work, skill, "references")
+        refs = os.path.join(work, "skills", skill, "references")
         if os.path.isdir(refs):
             with open(os.path.join(refs, "ghost.md"), "w", encoding="utf-8") as fh:
                 fh.write("никто на меня не ссылается\n")
@@ -203,7 +204,7 @@ def _(work):
 @mutation("посторонний .md в корне навыка", needle="в корне навыка")
 def _(work):
     skill = skills_of(work)[0]
-    with open(os.path.join(work, skill, "REFERENCE.md"), "w", encoding="utf-8") as fh:
+    with open(os.path.join(work, "skills", skill, "REFERENCE.md"), "w", encoding="utf-8") as fh:
         fh.write("старая конвенция\n")
 
 
@@ -212,7 +213,7 @@ def _(work):
 @mutation("навык пропал из каталога README", needle="отсутствует в каталоге")
 def _(work):
     skill = skills_of(work)[-1]
-    edit(work, "README.md", lambda t: t.replace(f"[`{skill}`]({skill}/)", skill))
+    edit(work, "README.md", lambda t: t.replace(f"[`{skill}`](skills/{skill}/)", skill))
 
 
 @mutation("устаревший бейдж README", needle="бейдж обещает")
@@ -223,7 +224,7 @@ def _(work):
 
 @mutation("новый навык не внесён в README", needle="отсутствует в каталоге")
 def _(work):
-    path = os.path.join(work, "zzz-new-skill")
+    path = os.path.join(work, "skills", "zzz-new-skill")
     os.makedirs(path)
     with open(os.path.join(path, "SKILL.md"), "w", encoding="utf-8") as fh:
         fh.write("---\nname: zzz-new-skill\ndescription: Тестовый навык. "
@@ -302,12 +303,12 @@ def run_bump(base: str) -> int:
             print("\n".join("         " + l for l in out.strip().splitlines()[:8]))
         return out
 
-    edit(clone, f"{skill}/SKILL.md", lambda t: t + "\nправка\n")
+    edit(clone, os.path.join("skills", skill, "SKILL.md"), lambda t: t + "\nправка\n")
     git(clone, "commit", "-qam", "edit skill")
     check("навык изменён, версии не бампнуты", ["--base", "base-ref"], True, "версия плагина осталась")
 
     old_skill_ver = skill_version(clone, skill)
-    edit(clone, f"{skill}/SKILL.md",
+    edit(clone, os.path.join("skills", skill, "SKILL.md"),
          lambda t: t.replace(f"version: {old_skill_ver}", "version: 9.9.9", 1))
     git(clone, "commit", "-qam", "bump skill only")
     check("бампнут навык, плагин — нет", ["--base", "base-ref"], True, "версия плагина осталась")
@@ -318,9 +319,9 @@ def run_bump(base: str) -> int:
 
     git(clone, "branch", "-f", "ref-base", "HEAD")
     for candidate in skills_of(clone):
-        refs = os.path.join(clone, candidate, "references")
+        refs = os.path.join(clone, "skills", candidate, "references")
         if os.path.isdir(refs) and os.listdir(refs):
-            rel = f"{candidate}/references/{sorted(os.listdir(refs))[0]}"
+            rel = os.path.join("skills", candidate, "references", sorted(os.listdir(refs))[0])
             edit(clone, rel, lambda t: t + "\nдобавка\n")
             break
     git(clone, "commit", "-qam", "edit reference only")
