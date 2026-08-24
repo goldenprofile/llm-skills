@@ -50,7 +50,7 @@ python scripts/run_routing_eval.py --tier 1
   `references/` нет.
 - В корне навыка только `SKILL.md` (плюс `references/`, `scripts/`,
   `templates/`); никаких `REFERENCE.md`.
-- README: каталог, дерево репозитория и бейдж «Skills: N» совпадают с составом.
+- README: каталог и бейдж «Skills: N» совпадают с составом.
 - `.claude-plugin/plugin.json` и `marketplace.json` — одна и та же версия.
 - Изменил навык — бампни `metadata.version` этого навыка и версию
   `plugin.json` (иначе кэш маркетплейса не увидит обновление).
@@ -75,7 +75,7 @@ python scripts/run_routing_eval.py --tier 1
 - тело навыка ≤ ~150 строк; тяжёлое выносится в `references/`
   (progressive disclosure — оно грузится только при срабатывании).
 
-Слово «аудит» уже несут 9 навыков из 28 (шесть — в имени: `django-audit`,
+Слово «аудит» уже несут 9 навыков из 24 (шесть — в имени: `django-audit`,
 `dependency-auditor`, `test-coverage-auditor`, `python-project-audit`,
 `migration-safety-auditor`, `aiogram-bot-auditor`). Новому навыку нужен
 собственный глагол (диагностика, тюнинг, проектирование, runbook, настройка),

@@ -50,9 +50,9 @@ TRIGGER_MARKERS = ("использу", "вызывается", "триггер",
 # у них metadata.verified протухает быстрее всего.
 VERSION_FRAGILE = {
     "advanced-seo-optimizer", "aiogram-bot-auditor", "claude-code-auditor",
-    "context-hygiene", "dependency-auditor", "django-tailwind-optimizer",
-    "fastapi-architect", "goal-pipeline", "google-discover-optimize",
-    "llm-delegation", "llm-feature-architect", "ratchet-loop",
+    "context-hygiene", "dependency-auditor",
+    "fastapi-architect", "goal-pipeline",
+    "llm-delegation", "ratchet-loop",
 }
 VERIFIED_STALE_DAYS = 180
 
@@ -352,23 +352,9 @@ def check_readme(repo: str, skills: list[str], rep: Report) -> None:
     readme = read(os.path.join(repo, "README.md"))
 
     catalogue = set(re.findall(r"\[`([\w\-]+)`\]\(skills/\1/\)", readme))
-    tree: set[str] = set()
-    in_skills = False
-    for line in readme.splitlines():
-        if re.match(r"^(?:├|└)── skills/$", line):
-            in_skills = True
-            continue
-        if in_skills:
-            m = re.match(r"^│\s+(?:├|└)── ([\w\-]+)/$", line)
-            if m:
-                tree.add(m.group(1))
-            else:
-                in_skills = False
     for skill in skills:
         if skill not in catalogue:
             rep.error("README.md", f"навык `{skill}` отсутствует в каталоге")
-        if skill not in tree:
-            rep.error("README.md", f"навык `{skill}` отсутствует в дереве репозитория")
     for extra in sorted(catalogue - set(skills)):
         rep.error("README.md", f"в каталоге есть `{extra}`, которого нет в репозитории")
 

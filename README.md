@@ -1,92 +1,93 @@
 # LLM Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Format: Agent Skills](https://img.shields.io/badge/format-SKILL.md-success.svg)](#формат-навыка)
-[![Skills: 24](https://img.shields.io/badge/skills-24-informational.svg)](#каталог-навыков)
+[![Format: Agent Skills](https://img.shields.io/badge/format-SKILL.md-success.svg)](#authoring-a-skill)
+[![Skills: 24](https://img.shields.io/badge/skills-24-informational.svg)](#skill-catalog)
 
-Коллекция переиспользуемых **агентских навыков** (Agent Skills) для LLM-ассистентов
-программирования — прежде всего [Claude Code](https://docs.claude.com/en/docs/claude-code),
-а также [OpenCode](https://opencode.ai). Каждый навык — это самодостаточная инструкция в
-формате `SKILL.md`, которую ассистент загружает по требованию, когда задача соответствует
-описанию навыка.
+A collection of reusable **Agent Skills** for LLM coding assistants — Claude Code, Codex,
+Cursor, Grok, Hermes, OpenCode and other clients of the format. Each skill is a self-contained
+instruction in `SKILL.md` format that the assistant loads on demand when a task matches the
+description of the skill.
 
-Навыки сфокусированы на повседневной разработке: аудит и отладка Django/Python-проектов,
-технический SEO, анализ незнакомых кодовых баз, code review, организация работы агента,
-ведение заметок (Obsidian) и проверка фактов.
+The library targets everyday backend work: auditing and debugging Django, FastAPI and
+aiogram projects, database migration safety and PostgreSQL performance, VPS operations and
+incident triage, code review, releases, technical SEO, exploring unfamiliar codebases,
+organising the work of the agent itself, and note-keeping in Obsidian.
 
----
-
-## Содержание
-
-- [Что такое навык](#что-такое-навык)
-- [Совместимость](#совместимость)
-- [Установка](#установка)
-- [Каталог навыков](#каталог-навыков)
-- [Формат навыка](#формат-навыка)
-- [Структура репозитория](#структура-репозитория)
-- [Создание нового навыка](#создание-нового-навыка)
-- [Лицензия](#лицензия)
+> **A note on language.** Skill instructions and their `description` fields are written in
+> Russian, which sets the default language of the interaction. The skills themselves work on
+> tasks in any language: the assistant reads the Russian instruction and replies in whatever
+> language you use. Translating the skills to English is planned; this README comes first.
 
 ---
 
-## Что такое навык
+## What is a skill
 
-Навык (skill) — это папка с файлом `SKILL.md`, который содержит:
+A skill is a folder containing a `SKILL.md` file with:
 
-- **YAML-фронтматтер** с полями `name` и `description` — по описанию ассистент решает,
-  когда навык применим;
-- **тело инструкции** — пошаговый процесс, чек-листы и правила, которым следует агент;
-- опциональную папку **`references/`** с дополнительными материалами (шаблоны отчётов,
-  чек-листы, примеры), которые подгружаются только при необходимости —
-  принцип *progressive disclosure*.
+- **YAML frontmatter** with `name` and `description` — the assistant uses the description to
+  decide when the skill applies;
+- **the instruction body** — the step-by-step process, checklists and rules the agent follows;
+- an optional **`references/`** folder with supporting material (report templates, checklists,
+  examples) loaded only when needed — the *progressive disclosure* principle.
 
-Такой формат позволяет держать основную инструкцию компактной, а тяжёлые детали выносить
-в отдельные файлы, экономя контекст модели.
-
----
-
-## Совместимость
-
-| Инструмент | Поддержка | Каталог навыков |
-|------------|-----------|-----------------|
-| **Claude Code** | нативная | `~/.claude/skills/` (глобально) или `.claude/skills/` (в проекте) |
-| **OpenCode** | нативная, в т.ч. чтение Claude-совместимых путей | `~/.config/opencode/skills/`, `.opencode/skills/`, а также `~/.claude/skills/` и `.claude/skills/` |
-| **Другие CLI** (Grok, Codex, Cursor, Hermes, …) | формат [Agent Skills](https://agentskills.io) | каталог навыков инструмента: `~/.grok/skills/`, `~/.agents/skills/`, `~/.cursor/skills/`, `~/.hermes/skills/` (и проектные `.grok/skills/`, `.agents/skills/`, `.cursor/skills/`) |
-
-> OpenCode умеет читать навыки напрямую из каталогов Claude Code, поэтому одна установка
-> в `~/.claude/skills/` делает навыки доступными сразу в обоих инструментах.
-
-Формат `SKILL.md` — открытый стандарт Agent Skills: одна папка навыка копируется
-в каталог соответствующего CLI без правок содержимого.
+This keeps the main instruction compact while heavy detail lives in separate files, saving
+context.
 
 ---
 
-## Установка
+## Compatibility
 
-### Вариант 0. Как плагин Claude Code (рекомендуемый)
+`SKILL.md` is an open format, originally released by Anthropic and now maintained as a
+standard at [agentskills.io](https://agentskills.io). A skill folder is copied into the
+skills directory of the relevant client without editing its contents.
 
-Репозиторий содержит манифесты плагина (`.claude-plugin/`), поэтому вся
-библиотека ставится и обновляется одной парой команд:
+| Client | Skills documentation | Directory |
+|--------|----------------------|-----------|
+| **Claude Code** | [docs](https://code.claude.com/docs/en/skills) | `~/.claude/skills/` (global) or `.claude/skills/` (per project) |
+| **OpenCode** | [docs](https://opencode.ai/docs/skills/) | `~/.config/opencode/skills/`, `.opencode/skills/`, and the Claude Code paths above |
+| **Codex** | [docs](https://developers.openai.com/codex/skills/) | see docs |
+| **Cursor** | [docs](https://cursor.com/docs/context/skills) | see docs |
+| **Grok** | — | own marketplace cache in `~/.grok/marketplace-cache/`; clones marketplaces already configured in Claude Code |
+| **Hermes** | [docs](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills) | see docs |
+
+Many other clients support the format — Gemini CLI, GitHub Copilot, VS Code, Goose, Amp,
+Roo Code, Factory, Kiro and more; the current list is the
+[client showcase](https://agentskills.io/clients). The folder contents are identical for all
+of them; only the destination directory differs.
+
+> One Claude Code install often covers more than one client. OpenCode reads the Claude Code
+> skills directories directly. Grok runs its own plugin marketplace, but clones the
+> marketplaces it finds configured in Claude Code, so adding this one there makes it show
+> up in Grok as well — with a separate cache that has to be refreshed separately.
+
+---
+
+## Install
+
+### As a Claude Code plugin (recommended)
+
+The repository ships plugin manifests (`.claude-plugin/`), so the whole library installs and
+updates with one pair of commands:
 
 ```
 /plugin marketplace add goldenprofile/llm-skills
 /plugin install llm-skills@goldenprofile
 ```
 
-Обновление после новых релизов: `/plugin marketplace update goldenprofile`.
+To pick up new releases: `/plugin marketplace update goldenprofile`.
 
-### Вариант 1. Клонировать всё и связать с каталогом навыков
+### Manually
+
+Clone the repository and copy the skill folders you want into the skills directory of your
+tool. Copy each folder whole, including its `references/`; the folder name must match the
+`name` field in the frontmatter.
 
 ```bash
-git clone https://github.com/goldenprofile/llm-skills.git llm-skills
+git clone https://github.com/goldenprofile/llm-skills.git
 cd llm-skills
-```
 
-Скопируйте нужные навыки в каталог вашего инструмента. Например, глобально для Claude Code
-(и автоматически для OpenCode):
-
-```bash
-# Linux / macOS
+# Linux / macOS — global for Claude Code (OpenCode reads the same path)
 mkdir -p ~/.claude/skills
 cp -r skills/django-audit skills/change-review skills/vps-ops ~/.claude/skills/
 ```
@@ -97,239 +98,195 @@ New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 Copy-Item -Recurse skills/django-audit, skills/change-review, skills/vps-ops "$HOME\.claude\skills\"
 ```
 
-### Вариант 2. Установить отдельный навык
+For a **project-level** install put the folders in `.claude/skills/` inside the project
+repository — they then reach everyone working on that project.
 
-Скопируйте одну папку из `skills/<имя>/` целиком (вместе с её `references/`, если есть) в каталог
-навыков. Имя папки должно совпадать с полем `name` во фронтматтере.
-
-### Вариант 3. Навыки уровня проекта
-
-Поместите папки навыков в `.claude/skills/` внутри репозитория проекта — тогда они будут
-доступны всем, кто работает с этим проектом через Claude Code или OpenCode.
-
-После установки навык активируется автоматически, когда ваш запрос соответствует его
-описанию. В Claude Code список доступных навыков можно посмотреть, упомянув их по имени.
+Once installed, a skill activates automatically when your request matches its description.
 
 ---
 
-## Каталог навыков
+## Skill catalog
 
 ### Django
 
-| Навык | Назначение |
-|-------|------------|
-| [`django-audit`](skills/django-audit/) | Комплексный аудит Django по линзам: архитектура, безопасность (OWASP), Celery, чистота кода, техдолг, готовность к деплою, тесты. |
+| Skill | Purpose |
+|-------|---------|
+| [`django-audit`](skills/django-audit/) | Django audit by lens: architecture, security (OWASP), Celery, code cleanliness, tech debt, deploy readiness, tests. |
 
 ### FastAPI
 
-| Навык | Назначение |
-|-------|------------|
-| [`fastapi-architect`](skills/fastapi-architect/) | Проектирование и ревью FastAPI: структура (APIRouter, lifespan, pydantic-settings), Pydantic v2, async-корректность (блокировка event loop, SQLAlchemy 2.x async), DI, тесты (httpx + dependency_overrides). |
+| Skill | Purpose |
+|-------|---------|
+| [`fastapi-architect`](skills/fastapi-architect/) | FastAPI design and review: structure (APIRouter, lifespan, pydantic-settings), Pydantic v2, async correctness (event-loop blocking, SQLAlchemy 2.x async), DI, tests (httpx + dependency_overrides). |
 
-### База данных и миграции
+### Database and migrations
 
-| Навык | Назначение |
-|-------|------------|
-| [`migration-safety-auditor`](skills/migration-safety-auditor/) | Аудит безопасности миграций БД (Django + Alembic) перед прод-деплоем: блокировки таблиц, downtime, потеря данных, обратная совместимость при zero-downtime, опасный backfill. Postgres и SQLite. |
-| [`postgres-performance`](skills/postgres-performance/) | Диагностика и тюнинг производительности PostgreSQL: EXPLAIN ANALYZE, индексы, pg_stat_statements, pgbouncer, autovacuum, память VPS. |
+| Skill | Purpose |
+|-------|---------|
+| [`migration-safety-auditor`](skills/migration-safety-auditor/) | Migration safety before a production deploy (Django + Alembic): table locks, downtime, data loss, backward compatibility for zero-downtime, unsafe backfill. Postgres and SQLite. |
+| [`postgres-performance`](skills/postgres-performance/) | PostgreSQL diagnosis and tuning: EXPLAIN ANALYZE, indexes, pg_stat_statements, pgbouncer, autovacuum, memory on a small VPS. |
 
-### Python и качество кода
+### Python and code quality
 
-| Навык | Назначение |
-|-------|------------|
-| [`python-project-audit`](skills/python-project-audit/) | Проверка заявленной готовности против фактической: незавершённый код, критические проблемы, мёртвые куски. Статанализ (pylint, bandit, mypy, radon, vulture) + ручной review, отчёт с баллами и вердиктом. |
-| [`test-coverage-auditor`](skills/test-coverage-auditor/) | Аудит качества тестов Python/Django: тесты без assertions, моки без проверок, непокрытый критический код, skip без причины. |
-| [`change-review`](skills/change-review/) | Глубокий разбор ОДНОГО изменения с вердиктом APPROVE / REQUEST CHANGES и шкалой критичности. Режимы: **self** (силами Claude — корректность, безопасность, надёжность, границы слоёв) и **second-opinion** (другая модель через CLI `hermes`: галлюцинации API, edge cases, over-engineering). |
-| [`dependency-auditor`](skills/dependency-auditor/) | Аудит зависимостей и supply-chain Python: pip-audit/safety и CVE, пиннинг и lockfiles (uv/poetry/pip-tools), безопасные апгрейды с разбором breaking changes. |
+| Skill | Purpose |
+|-------|---------|
+| [`python-project-audit`](skills/python-project-audit/) | Claimed readiness against actual: unfinished code, critical problems, dead sections. Static analysis (pylint, bandit, mypy, radon, vulture) plus manual review, with a scored report and a verdict. |
+| [`test-coverage-auditor`](skills/test-coverage-auditor/) | Test-quality audit for Python/Django: tests without assertions, mocks that verify nothing, uncovered critical paths, skips without a reason. |
+| [`change-review`](skills/change-review/) | Deep review of ONE change with an APPROVE / REQUEST CHANGES verdict and a severity scale. Modes: **self** (Claude reviews — correctness, security, reliability, layer boundaries) and **second-opinion** (a different model through the `hermes` CLI: API hallucinations, edge cases, over-engineering). |
+| [`dependency-auditor`](skills/dependency-auditor/) | Dependency and supply-chain audit: pip-audit/safety and CVEs, pinning and lockfiles (uv/poetry/pip-tools), safe upgrades with breaking changes called out. |
 
-### Telegram-боты (aiogram)
+### Telegram bots (aiogram)
 
-| Навык | Назначение |
-|-------|------------|
-| [`aiogram-bot-auditor`](skills/aiogram-bot-auditor/) | Аудит и помощь по ботам на aiogram 3.x: надёжность Telegram API (flood-control 429, блокировки, single instance), архитектура (Router/middlewares/FSM), деплой (polling под systemd, webhook+nginx, RedisStorage) и тесты. |
+| Skill | Purpose |
+|-------|---------|
+| [`aiogram-bot-auditor`](skills/aiogram-bot-auditor/) | Audit and guidance for aiogram 3.x bots: Telegram API reliability (flood control 429, blocks, single instance), architecture (Router/middlewares/FSM), deployment (polling under systemd, webhook + nginx, RedisStorage) and tests. |
 
-### Деплой и инфраструктура
+### Deployment and infrastructure
 
-| Навык | Назначение |
-|-------|------------|
-| [`vps-ops`](skills/vps-ops/) | Эксплуатация на VPS без Docker (nginx + systemd + postgres + redis) в трёх режимах: **deploy** (конфиги и аудит деплоя), **observe** (Sentry, healthcheck, логи, алерты), **triage** (runbook инцидента: 502/504, рестарт-луп, диск, postgres). |
+| Skill | Purpose |
+|-------|---------|
+| [`vps-ops`](skills/vps-ops/) | Running Python apps on a single VPS without Docker (nginx + systemd + postgres + redis) in three modes: **deploy** (configs and deployment audit), **observe** (Sentry, healthchecks, logs, alerts), **triage** (incident runbook: 502/504, restart loops, disk, postgres). |
 
-### Анализ кодовой базы
+### Codebase analysis
 
-| Навык | Назначение |
-|-------|------------|
-| [`codebase-recon`](skills/codebase-recon/) | Разведка кодовой базы в двух режимах: **whole** (незнакомый проект целиком — стек, точки входа, потоки данных, бизнес-цель) и **subject** (одна область или фича адресно, с gap-анализом «текущее против желаемого»). Только чтение. |
+| Skill | Purpose |
+|-------|---------|
+| [`codebase-recon`](skills/codebase-recon/) | Codebase reconnaissance in two modes: **whole** (an unfamiliar project end to end — stack, entry points, data flows, business goal) and **subject** (one area or feature, with a current-versus-desired gap analysis). Read-only. |
 
-### Рабочий процесс агента
+### Agent workflow
 
-| Навык | Назначение |
-|-------|------------|
-| [`agent-workflow`](skills/agent-workflow/) | Работа с самим агентом в пяти режимах: **delegate** (сам или агент, какой режим и модель), **decompose** (разбить задачу на куски в один заход), **prompt** (из разговорного описания в однозначное задание), **context** (деградация сессии, слои знания, чек-лист CLAUDE.md), **audit** (ретроспектива: повторяющиеся ошибки, протухшая документация, guardrails). |
-| [`git-commit-planner`](skills/git-commit-planner/) | Разбор изменений в git и план логических атомарных коммитов вместо одного монолитного. |
-| [`release-manager`](skills/release-manager/) | Релизы: semver по диффу, CHANGELOG из Conventional Commits, git-теги и GitHub Releases, пре-релизный чеклист и smoke. |
-| [`session-catchup`](skills/session-catchup/) | Возобновление прерванной сессии: восстановление контекста из git, файлов состояния и истории диалога. |
-| [`harness-engineering`](skills/harness-engineering/) | Обвязка Python-проекта для AI-агентов: Makefile, CI (GitHub Actions), `ARCHITECTURE.md`, синхронизация `CLAUDE.md`/`AGENTS.md`, а Definition of Done вызывает остальные навыки библиотеки. Деплой systemd/nginx, Symphony опционально. |
-| [`goal-pipeline`](skills/goal-pipeline/) | Минимальный планировщик-исполнитель поверх нативной `/goal` Claude Code: лёгкий recon, разбивка brownfield-задачи на фазы с измеримыми критериями, вшитые гейты toolkit по типу фазы (migration-safety-auditor, /code-review, pyright, test-coverage-auditor), одна готовая строка `/goal`, аудит против исходного плана. Профили автономности с чекпоинтом на рискованных фазах. |
-| [`ratchet-loop`](skills/ratchet-loop/) | In-session петля-храповик: тянет ОДИН измеримый скаляр (latency, число SQL-запросов, размер бандла, pass-rate) до упора — оставляет только улучшившие изменения, остальное откатывает через git. Замороженный оценщик (anti-Goodhart) + независимый verifier-проход; сама не терминируется, крутится до бюджета/плато. |
+| Skill | Purpose |
+|-------|---------|
+| [`agent-workflow`](skills/agent-workflow/) | Working on the agent itself, in five modes: **delegate** (do it myself or hand it over, which mode and model), **decompose** (split a task into single-pass chunks), **prompt** (turn loose wording into an unambiguous brief), **context** (session degradation, knowledge layers, a CLAUDE.md checklist), **audit** (retrospective: repeated mistakes, stale docs, guardrails). |
+| [`git-commit-planner`](skills/git-commit-planner/) | Reads the working tree and plans logical atomic commits instead of one monolithic one. |
+| [`release-manager`](skills/release-manager/) | Releases: semver from the diff, CHANGELOG from Conventional Commits, git tags and GitHub Releases, a pre-release checklist and smoke test. |
+| [`session-catchup`](skills/session-catchup/) | Resuming interrupted work: rebuilding context from git, state files and the conversation history. |
+| [`harness-engineering`](skills/harness-engineering/) | Harness for a Python project so agents can work in it: Makefile, CI (GitHub Actions), `ARCHITECTURE.md`, `CLAUDE.md`/`AGENTS.md` sync, and a Definition of Done that calls the other skills in this library. Owns the canonical Makefile target namespace. |
+| [`goal-pipeline`](skills/goal-pipeline/) | A planner-executor on top of the native Claude Code `/goal`: light recon, splitting a brownfield task into phases with measurable criteria, quality gates wired in per phase type (migration-safety-auditor, /code-review, pyright, test-coverage-auditor), one ready `/goal` line, and an audit against the original plan. |
+| [`ratchet-loop`](skills/ratchet-loop/) | An in-session ratchet: pushes ONE measurable scalar (latency, SQL query count, bundle size, pass rate) as far as it goes — keeps only the changes that improved it and reverts the rest through git. Frozen evaluator (anti-Goodhart) plus an independent verifier pass; it does not self-terminate, it runs to a budget or a plateau. |
 
-### Документация
+### Documentation
 
-| Навык | Назначение |
-|-------|------------|
-| [`docs-generator`](skills/docs-generator/) | Документация: README, ADR, docstrings (Google style) и синхронизация `CLAUDE.md`/`AGENTS.md`. Генерация недостающего и аудит устаревшего. |
-| [`sage`](skills/sage/) | Координатор виртуальной команды: сырой вход (черновик, пост, схема) → пакет документов (summary, discussion, design/runbook). Не один spec. |
-| [`spec-writer`](skills/spec-writer/) | Проектные документы в трёх режимах: spec (техспецификация: проблема, цели, архитектура, ADR-решения, риски), plan (фазы, оценки, зависимости) и brief (аналитическая записка для руководства, без кода). |
+| Skill | Purpose |
+|-------|---------|
+| [`docs-generator`](skills/docs-generator/) | Documentation: README, ADRs, docstrings (Google style) and `CLAUDE.md`/`AGENTS.md` sync. Writes what is missing and flags what has gone stale. |
+| [`sage`](skills/sage/) | Virtual-team coordinator: a raw input (draft, post, diagram) becomes a package of documents (summary, discussion, design/runbook). Not a single spec. |
+| [`spec-writer`](skills/spec-writer/) | Project documents in three modes: spec (problem, goals, architecture, ADR decisions, risks), plan (phases, estimates, dependencies) and brief (a note for management, no code). |
 
-### Заметки и знания
+### Notes and knowledge
 
-| Навык | Назначение |
-|-------|------------|
-| [`obsidian`](skills/obsidian/) | Работа с хранилищем Obsidian (filesystem-first): клиппинги, проектные задачи со статусами, ADR, дневник, бриф проекта, синтез исследований, ревью и анализ графа тегов/ссылок. |
+| Skill | Purpose |
+|-------|---------|
+| [`obsidian`](skills/obsidian/) | Working with an Obsidian vault (filesystem-first): clippings, project tasks with status, ADRs, a work journal, project briefs, research synthesis, reviews, and analysis of the tag and link graph. |
 
-### SEO и контент
+### SEO and content
 
-| Навык | Назначение |
-|-------|------------|
-| [`advanced-seo-optimizer`](skills/advanced-seo-optimizer/) | Глубокий технический SEO-аудит Django и FastAPI (Jinja2): семантика, meta/OG, Schema.org JSON-LD, robots/sitemap, hreflang, Core Web Vitals, AI-краулеры и llms.txt. Линза Google Discover: `max-image-preview`, E-E-A-T, NewsArticle, RSS. |
+| Skill | Purpose |
+|-------|---------|
+| [`advanced-seo-optimizer`](skills/advanced-seo-optimizer/) | Technical SEO audit for server-rendered HTML in Django and FastAPI (Jinja2): semantics, meta/OG, Schema.org JSON-LD, robots/sitemap, hreflang, Core Web Vitals, AI crawlers and llms.txt. Includes a Google Discover lens: `max-image-preview`, E-E-A-T, NewsArticle, RSS. |
 
-### Фронтенд и дизайн
+### Frontend and design
 
-| Навык | Назначение |
-|-------|------------|
-| [`ui-dna`](skills/ui-dna/) | Разбор визуального языка живого сайта в измеренные значения через `getComputedStyle`: палитра, шрифты и веса, шкала кеглей, отступы, радиусы, CSS-переменные, сигнатуры компонентов. Режимы extract и compare. |
+| Skill | Purpose |
+|-------|---------|
+| [`ui-dna`](skills/ui-dna/) | Turns the visual language of a live site into measured values via `getComputedStyle`: palette, fonts and weights, type scale, spacing, radii, CSS variables, component signatures. Modes extract and compare. |
 
 ---
 
-## Формат навыка
+## Validating the library
+
+Library invariants (description limit, `name` matching the folder, live links into
+`references/`, README and manifests in sync, version bumps) are checked by a script with no
+external dependencies — Python 3.10+ is all it needs:
+
+```bash
+python scripts/validate_skills.py            # gate: errors and warnings
+python scripts/validate_skills.py --list     # per-skill metrics table
+python scripts/validate_skills.py --info     # quality backlog (does not fail the build)
+python scripts/validate_skills.py --strict --check-bump   # CI mode
+python scripts/test_validate_skills.py       # tests for the validator itself
+```
+
+GitHub Actions runs the same checks on every push and pull request.
+
+### Routing eval
+
+The validator checks shape, not the thing that matters: whether a skill fires when it is
+needed. That is measured by a separate run over anonymised phrasings taken from real work
+(`evals/routing-cases.jsonl`). Each case runs as its own `claude -p` session in a disposable
+sandbox with editing and network tools disabled:
+
+```bash
+python scripts/run_routing_eval.py --dry-run   # what is in the set, at no cost
+python scripts/run_routing_eval.py --tier 1    # run a subset
+```
+
+The run calls the API and costs money — the price of each case and the total are printed.
+Metrics: **silent** (the skill was needed and did not fire), **wrong one** (a neighbour fired),
+**false positive** (the skill was not needed).
+
+---
+
+## Authoring a skill
+
+A skill folder looks like this:
 
 ```
-<имя-навыка>/
-├── SKILL.md            # обязательный: фронтматтер + инструкция
-└── references/         # опционально: подгружаемые по требованию материалы
+<skill-name>/
+├── SKILL.md            # required: frontmatter + instruction
+└── references/         # optional: material loaded on demand
     ├── checklist.md
     └── template.md
 ```
 
-Минимальный `SKILL.md`:
+A minimal `SKILL.md`:
 
 ```markdown
 ---
 name: my-skill
 description: >
-  Кратко — что делает навык и КОГДА его применять. Описание используется
-  ассистентом для срабатывания, поэтому формулируйте триггеры явно
-  («используй когда пользователь просит …»). Минимум ~20 символов.
+  Briefly — what the skill does and WHEN to apply it. The assistant matches on this
+  description, so state the triggers explicitly ("use when the user asks …").
+  At least ~20 characters.
 ---
 
 # My Skill
 
-Пошаговая инструкция, которой следует агент…
+The step-by-step instruction the agent follows…
 ```
 
-Требования к фронтматтеру:
+To add one:
 
-- `name` должен совпадать с именем папки навыка;
-- `description` должен содержательно описывать назначение **и условия срабатывания**.
+1. Create a folder named in kebab-case; `name` in the frontmatter must match it.
+2. Write `SKILL.md`: frontmatter plus the instruction.
+3. Move bulky material into `references/` and link to it from `SKILL.md`. The conventional
+   name for the output-format reference is `references/output-format.md`.
+4. Write the `description` so the assistant understands **when** to apply the skill. The limit
+   is **1024 characters** (Anthropic validation); aim for 600–900: what it does → strong
+   trigger phrases → how it differs from neighbouring skills.
+5. Try the skill on a real task before committing.
+6. Update the catalog and the badge in this README, and bump `version` in
+   `.claude-plugin/plugin.json` and `marketplace.json` — otherwise the marketplace cache will
+   not see the change.
+7. Run `python scripts/validate_skills.py --strict`, which checks all of the above and will
+   not let you forget the version bump.
 
 ---
 
-## Структура репозитория
+## Repository layout
 
-```
-.
-├── .claude-plugin/     # манифесты плагина (plugin.json, marketplace.json)
-├── .github/workflows/  # CI: валидация библиотеки на push и pull request
-├── evals/              # роутинг-eval: запрос → ожидаемый навык
-├── scripts/            # валидатор, его тесты и прогон eval (stdlib, без venv)
-├── skills/
-│   ├── advanced-seo-optimizer/
-│   ├── agent-workflow/
-│   ├── aiogram-bot-auditor/
-│   ├── change-review/
-│   ├── codebase-recon/
-│   ├── dependency-auditor/
-│   ├── django-audit/
-│   ├── docs-generator/
-│   ├── fastapi-architect/
-│   ├── git-commit-planner/
-│   ├── goal-pipeline/
-│   ├── harness-engineering/
-│   ├── migration-safety-auditor/
-│   ├── obsidian/
-│   ├── postgres-performance/
-│   ├── python-project-audit/
-│   ├── ratchet-loop/
-│   ├── release-manager/
-│   ├── sage/
-│   ├── session-catchup/
-│   ├── spec-writer/
-│   ├── test-coverage-auditor/
-│   ├── ui-dna/
-│   └── vps-ops/
-├── .gitattributes      # нормализация переводов строк (LF)
-├── .gitignore
-├── CLAUDE.md           # контракт репозитория для агента
-├── LICENSE
-├── README.md
-```
+| Path | Contents |
+|------|----------|
+| `skills/` | one folder per skill — the library itself |
+| `references/` (inside a skill) | material loaded on demand |
+| `.claude-plugin/` | plugin manifests (`plugin.json`, `marketplace.json`) |
+| `evals/` | routing eval: prompt → expected skill |
+| `scripts/` | validator, its tests and the eval runner (stdlib only, no venv) |
+| `.github/workflows/` | CI: library validation on push and pull request |
+| `CLAUDE.md` | the repository contract for the agent |
 
 ---
 
-## Проверка библиотеки
+## License
 
-Инварианты библиотеки (лимит описания, `name` = имя папки, живые ссылки на
-`references/`, синхронность README и манифестов, бамп версий) проверяются
-скриптом без внешних зависимостей — нужен только Python 3.10+:
-
-```bash
-python scripts/validate_skills.py            # гейт: ошибки и предупреждения
-python scripts/validate_skills.py --list     # таблица метрик по навыкам
-python scripts/validate_skills.py --info     # бэклог качества (не валит сборку)
-python scripts/validate_skills.py --strict --check-bump   # режим CI
-python scripts/test_validate_skills.py       # тесты самого валидатора
-```
-
-Те же проверки выполняет GitHub Actions на каждый push и pull request.
-
-### Роутинг-eval
-
-Валидатор проверяет форму, но не главное: сработает ли навык, когда он нужен.
-Это меряет отдельный прогон на обезличенных формулировках из реальной работы
-(`evals/routing-cases.jsonl`) — каждый кейс запускается отдельной сессией
-`claude -p` в одноразовой песочнице, инструменты правки и сети отключены:
-
-```bash
-python scripts/run_routing_eval.py --dry-run   # состав набора, без затрат
-python scripts/run_routing_eval.py --tier 1    # прогон подмножества
-```
-
-Прогон обращается к API и стоит денег — цена каждого кейса и итог печатаются.
-Метрики: **молчит** (навык нужен, но не сработал), **не тот** (сработал
-соседний), **ложное срабатывание** (навык не был нужен).
-
----
-
-## Создание нового навыка
-
-1. Создайте папку с именем навыка в kebab-case.
-2. Добавьте `SKILL.md` с фронтматтером (`name` = имя папки) и инструкцией.
-3. Вынесите объёмные материалы в `references/` и ссылайтесь на них из `SKILL.md`.
-   Конвенция имени справочника выходного формата — `references/output-format.md`.
-4. Сформулируйте `description` так, чтобы ассистент понимал, **когда** применять
-   навык. Лимит — **1024 символа** (валидация Anthropic); ориентир 600–900:
-   что делает → сильные триггер-фразы → разграничение со смежными навыками.
-5. Проверьте навык на реальной задаче перед коммитом.
-6. Обновите каталог, дерево и бейдж в README и поднимите `version` в
-   `.claude-plugin/plugin.json` и `marketplace.json` — иначе кэш маркетплейса
-   не увидит изменений.
-7. Прогоните `python scripts/validate_skills.py --strict` — он проверит всё
-   перечисленное выше и не даст забыть про бамп версий.
-
-Описания навыков в этом репозитории написаны на русском языке, что задаёт язык
-взаимодействия по умолчанию; сами навыки работают с задачами на любом языке.
-
----
-
-## Лицензия
-
-Распространяется по лицензии [MIT](LICENSE). © 2026 Ivan Sinyavskiy.
+Released under the [MIT](LICENSE) license. © 2026 Ivan Sinyavskiy.
