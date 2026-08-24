@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/format-SKILL.md-success.svg)](#формат-навыка)
-[![Skills: 28](https://img.shields.io/badge/skills-28-informational.svg)](#каталог-навыков)
+[![Skills: 24](https://img.shields.io/badge/skills-24-informational.svg)](#каталог-навыков)
 
 Коллекция переиспользуемых **агентских навыков** (Agent Skills) для LLM-ассистентов
 программирования — прежде всего [Claude Code](https://docs.claude.com/en/docs/claude-code),
@@ -118,9 +118,7 @@ Copy-Item -Recurse skills/django-audit, skills/change-review, skills/vps-ops "$H
 
 | Навык | Назначение |
 |-------|------------|
-| [`advanced-seo-optimizer`](skills/advanced-seo-optimizer/) | Глубокий технический SEO-аудит Django и FastAPI (Jinja2): семантика, meta/OG, Schema.org JSON-LD, robots/sitemap, hreflang, Core Web Vitals, AI-краулеры и llms.txt. |
 | [`django-audit`](skills/django-audit/) | Комплексный аудит Django по линзам: архитектура, безопасность (OWASP), Celery, чистота кода, техдолг, готовность к деплою, тесты. |
-| [`django-tailwind-optimizer`](skills/django-tailwind-optimizer/) | Анализ Django-шаблонов на Tailwind CSS: дублирование стилей, переход с CDN на production-сборку. |
 
 ### FastAPI
 
@@ -140,7 +138,6 @@ Copy-Item -Recurse skills/django-audit, skills/change-review, skills/vps-ops "$H
 | Навык | Назначение |
 |-------|------------|
 | [`python-project-audit`](skills/python-project-audit/) | Проверка заявленной готовности против фактической: незавершённый код, критические проблемы, мёртвые куски. Статанализ (pylint, bandit, mypy, radon, vulture) + ручной review, отчёт с баллами и вердиктом. |
-| [`test-writer`](skills/test-writer/) | Написание тестов (pytest-first): стратегия покрытия, дизайн кейсов, фикстуры/фабрики, паттерны Django/FastAPI/aiogram. |
 | [`test-coverage-auditor`](skills/test-coverage-auditor/) | Аудит качества тестов Python/Django: тесты без assertions, моки без проверок, непокрытый критический код, skip без причины. |
 | [`change-review`](skills/change-review/) | Глубокий разбор ОДНОГО изменения с вердиктом APPROVE / REQUEST CHANGES и шкалой критичности. Режимы: **self** (силами Claude — корректность, безопасность, надёжность, границы слоёв) и **second-opinion** (другая модель через CLI `hermes`: галлюцинации API, edge cases, over-engineering). |
 | [`dependency-auditor`](skills/dependency-auditor/) | Аудит зависимостей и supply-chain Python: pip-audit/safety и CVE, пиннинг и lockfiles (uv/poetry/pip-tools), безопасные апгрейды с разбором breaking changes. |
@@ -175,12 +172,6 @@ Copy-Item -Recurse skills/django-audit, skills/change-review, skills/vps-ops "$H
 | [`goal-pipeline`](skills/goal-pipeline/) | Минимальный планировщик-исполнитель поверх нативной `/goal` Claude Code: лёгкий recon, разбивка brownfield-задачи на фазы с измеримыми критериями, вшитые гейты toolkit по типу фазы (migration-safety-auditor, /code-review, pyright, test-coverage-auditor), одна готовая строка `/goal`, аудит против исходного плана. Профили автономности с чекпоинтом на рискованных фазах. |
 | [`ratchet-loop`](skills/ratchet-loop/) | In-session петля-храповик: тянет ОДИН измеримый скаляр (latency, число SQL-запросов, размер бандла, pass-rate) до упора — оставляет только улучшившие изменения, остальное откатывает через git. Замороженный оценщик (anti-Goodhart) + независимый verifier-проход; сама не терминируется, крутится до бюджета/плато. |
 
-### LLM в продукте
-
-| Навык | Назначение |
-|-------|------------|
-| [`llm-feature-architect`](skills/llm-feature-architect/) | Проектирование и ревью LLM-фич в продукте (Django/FastAPI/aiogram): форма задачи и модель, сервис-обёртка с ретраями и очередью, structured output + pydantic, контроль стоимости, evals на золотом наборе, prompt injection и PII. |
-
 ### Документация
 
 | Навык | Назначение |
@@ -199,13 +190,13 @@ Copy-Item -Recurse skills/django-audit, skills/change-review, skills/vps-ops "$H
 
 | Навык | Назначение |
 |-------|------------|
-| [`google-discover-optimize`](skills/google-discover-optimize/) | Аудит и оптимизация статей под Google Discover: изображения, E-E-A-T, NewsArticle JSON-LD, мобильные Core Web Vitals. |
+| [`advanced-seo-optimizer`](skills/advanced-seo-optimizer/) | Глубокий технический SEO-аудит Django и FastAPI (Jinja2): семантика, meta/OG, Schema.org JSON-LD, robots/sitemap, hreflang, Core Web Vitals, AI-краулеры и llms.txt. Линза Google Discover: `max-image-preview`, E-E-A-T, NewsArticle, RSS. |
 
-### Исследование и факты
+### Фронтенд и дизайн
 
 | Навык | Назначение |
 |-------|------------|
-| [`fact-checker`](skills/fact-checker/) | Систематическая проверка фактов и выявление дезинформации с обязательной верификацией источников через веб-поиск. |
+| [`ui-dna`](skills/ui-dna/) | Разбор визуального языка живого сайта в измеренные значения через `getComputedStyle`: палитра, шрифты и веса, шкала кеглей, отступы, радиусы, CSS-переменные, сигнатуры компонентов. Режимы extract и compare. |
 
 ---
 
@@ -258,15 +249,11 @@ description: >
 │   ├── codebase-recon/
 │   ├── dependency-auditor/
 │   ├── django-audit/
-│   ├── django-tailwind-optimizer/
 │   ├── docs-generator/
-│   ├── fact-checker/
 │   ├── fastapi-architect/
 │   ├── git-commit-planner/
 │   ├── goal-pipeline/
-│   ├── google-discover-optimize/
 │   ├── harness-engineering/
-│   ├── llm-feature-architect/
 │   ├── migration-safety-auditor/
 │   ├── obsidian/
 │   ├── postgres-performance/
@@ -277,7 +264,7 @@ description: >
 │   ├── session-catchup/
 │   ├── spec-writer/
 │   ├── test-coverage-auditor/
-│   ├── test-writer/
+│   ├── ui-dna/
 │   └── vps-ops/
 ├── .gitattributes      # нормализация переводов строк (LF)
 ├── .gitignore

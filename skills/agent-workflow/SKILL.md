@@ -13,7 +13,7 @@ description: >
   CLAUDE.md», «проверь себя». Возобновить прерванную работу —
   session-catchup; обвязка проекта — harness-engineering.
 metadata:
-  version: 1.2.1
+  version: 1.2.2
   verified: 2026-08-10
 ---
 
@@ -66,7 +66,6 @@ prompt. Не гони через все пять, если спрошено пр
 - `spec-writer` — документ-план с фазами, оценками и рисками (decompose даёт рабочий
   список кусков, а не документ).
 - `goal-pipeline` / `ratchet-loop` — автономное исполнение фаз и оптимизация метрики.
-- `llm-feature-architect` — LLM внутри вашего продукта, а не в вашей работе.
 - `change-review` — второе мнение о полученном коде.
 
 ## Справочники

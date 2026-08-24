@@ -106,6 +106,28 @@ Google убрал ещё в 2024 — разметка теперь чисто м
 ```
 Даты — реальные значения из модели (`published_at`/`updated_at`), формат ISO 8601 с таймзоной.
 
+### Discover-дельта (только для статей)
+
+Для попадания в Google Discover тот же `NewsArticle` дополняется:
+
+```json
+"image": [
+  "https://example.com/photos/1x1/photo.jpg",
+  "https://example.com/photos/4x3/photo.jpg",
+  "https://example.com/photos/16x9/photo.jpg"
+],
+"author": {
+  "@type": "Person",
+  "name": "Имя Автора",
+  "url": "https://example.com/author/name",
+  "jobTitle": "Должность"
+},
+"description": "Краткое описание для сниппета (до 160 символов)"
+```
+
+Три соотношения сторон дают Google выбор превью под формат ленты; `author.url`
+и `jobTitle` работают на E-E-A-T. Остальное — см. [discover.md](discover.md).
+
 ## FAQPage
 
 > **Статус (07.05.2026):** Google полностью вывел FAQ rich results для всех сайтов — это финал

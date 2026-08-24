@@ -5,13 +5,15 @@ description: >
   server-rendered HTML (Django-шаблоны, FastAPI + Jinja2) — Schema.org
   JSON-LD, meta/OG/Twitter, canonical, robots.txt и sitemap.xml, hreflang,
   хлебные крошки, Core Web Vitals, доступ AI-краулеров (GPTBot, ClaudeBot,
-  PerplexityBot) и llms.txt. Используй когда пользователь говорит «проверь
-  sitemap.xml», «Search Console не может обработать файл», «проверь schema
-  разметку», «почему страница не индексируется», просит SEO-аудит шаблонов,
-  meta-теги, canonical или видимость в AI-поиске. Попадание статьи в
-  мобильную ленту Google — google-discover-optimize.
+  PerplexityBot) и llms.txt. Отдельная линза — попадание статьи в мобильную
+  ленту Google Discover («Рекомендации Google», Web Stories,
+  max-image-preview, E-E-A-T, RSS). Используй когда пользователь говорит
+  «проверь sitemap.xml», «Search Console не может обработать файл»,
+  «проверь schema разметку», «почему страница не индексируется», «почему
+  статья не попадает в Discover», просит SEO-аудит шаблонов, meta-теги,
+  canonical или видимость в AI-поиске.
 metadata:
-  version: 1.3.1
+  version: 1.4.0
 ---
 
 # Advanced SEO Optimizer
@@ -58,6 +60,18 @@ FastAPI + Jinja2. Проводишь глубокий аудит, находиш
    [references/django.md](references/django.md). FastAPI + Jinja2: proxy-headers для canonical
    (частейший баг), Jinja2-globals, robots/sitemap-роуты, Cache-Control/microcache,
    selectinload — [references/fastapi.md](references/fastapi.md).
+
+## Линза: Google Discover (только для статей)
+
+Применяй, если тип страницы — Article, или пользователь спрашивает про Discover;
+для Home / Category / Product линзу пропусти, указав причину. Полный разбор —
+[references/discover.md](references/discover.md).
+
+Восемь блоков: изображение (>=1200px и `max-image-preview:large` — самая частая причина
+отсутствия в ленте), E-E-A-T и авторство, NewsArticle-разметка, мобильная специфика
+поверх пункта 7, RSS/Follow, заголовок без кликбейта, Publisher Center и отчёт Discover
+в GSC, первичный импульс. Находки добавляй в общий отчёт с префиксом `D` и той же
+шкалой приоритетов.
 
 ## Окружение
 
