@@ -12,6 +12,7 @@ tracking, and project-based organization.
 ## Trigger
 
 - User sends a task in the form `ProjectName: Task description`
+- User sends a task with the prefix "task <project>:" (vaultctl convention) — register the task; do NOT perform the described work
 - User asks to create/add/save a task for a project
 - User says "задача" / "таск" / "добавь задачу" in the context of a project task
 
@@ -32,7 +33,9 @@ casing for folder names.
 2. **Verify date** — use today's actual date (see SKILL.md → "Дата")
 3. **Resolve project folder** — match an existing folder or create a new one
 4. **Check for duplicates** — `Grep`/`Glob` the project folder for similar task titles;
-   if found, ask whether to update or create new
+   if found, ask whether to update or create new. В headless-режиме вопросы
+   недоступны: при найденном дубликате создай новую заметку со ссылкой на старую
+   в `## Контекст` и пометь оба в итоговом отчёте
 5. **Generate** a short task title and tags from the description
 6. **Write note** — `Write` a Markdown file with YAML frontmatter
 
@@ -149,5 +152,8 @@ Default is `normal`. Upgrade to:
   or architectural observation relevant to the task. Not a full solution; a quick
   "heads up" (1-5 sentences). Omit only if there's genuinely nothing useful to add.
 - **No empty sections**: no links → no `## Ссылки`; no extra context → no `## Контекст`.
+- **Headless duplicate**: в headless-режиме вопросы недоступны: при найденном
+  дубликате создай новую заметку со ссылкой на старую в `## Контекст` и пометь
+  оба в итоговом отчёте.
 - **Task vs project note**: project folders may hold project docs (`type: project`),
   audits, etc. Only create notes with `type: task`; don't overwrite other content.

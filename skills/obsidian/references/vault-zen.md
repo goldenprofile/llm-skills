@@ -170,6 +170,9 @@ the user explicitly asks to save the report.
   3. Archive stale content (move to `Архив/` subfolder)
   4. Fix frontmatter (`Edit`)
   5. Confirm each destructive action (delete/move) unless told "без подтверждения"
+- **Headless-режим**: подтверждения заменяются безопасным дефолтом (архив вместо
+  удаления, перенос вместо безвозвратного переименования), каждая фаза завершается
+  отчётом; продолжай без ожидания пользователя.
 
 ### Execution Heuristics
 

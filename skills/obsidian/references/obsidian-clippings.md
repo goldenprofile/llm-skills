@@ -137,7 +137,9 @@ it as a clipping.
 
 ### Workflow
 
-1. **Fetch** the page content with `WebFetch` (or `curl` for raw HTML)
+1. **Fetch** the page content with `WebFetch` (or `curl` for raw HTML). Если
+   WebFetch недоступен: `curl -sL --max-time 30 "<url>" -o /tmp/page.html`.
+   Таймаут обязателен — без него подвешенный сервер блокирует ход агента
 2. **For GitHub repos** — also fetch metadata via the GitHub API
    (`https://api.github.com/repos/{owner}/{repo}`: stars, language, license, last update)
    and the raw README from `raw.githubusercontent.com`
