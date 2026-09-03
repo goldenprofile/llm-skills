@@ -19,28 +19,32 @@ Symphony = автономные прогоны задач: трекер → из
 
 Создавай только при явном выборе «Harness + Symphony». Конфиг — YAML front-matter + промпт-шаблон:
 
+Схема меняется — **сверяй конфиг с актуальной**
+[SPEC](https://github.com/openai/symphony/blob/main/SPEC.md) перед генерацией, а не по памяти.
+
 ```yaml
 ---
 tracker:
   kind: github            # github | linear | manual
-  active_states: "Todo, In Progress"
-  terminal_states: "Done, Closed, Cancelled"
+  active_states:          # СПИСКИ строк, не строка через запятую
+    - "Todo"
+    - "In Progress"
+  terminal_states:
+    - "Done"
+    - "Closed"
+    - "Cancelled"
+  provider: {}            # ключи задаёт адаптер трекера — смотри его доку
 polling:
   interval_ms: 30000
 workspace:
   root: ./workspaces      # каждая задача = отдельный worktree/директория
 hooks:
-  after_create: |
-    git worktree add . <branch>
-    uv sync --all-extras --dev
-  before_run: |
-    git pull origin main
-    make check
-  after_run: |
-    make check
-    git add -A && git commit -m "auto: $ISSUE_ID"
+  timeout_ms: 600000      # ОДИН лимит на все хуки; дефолт 60 000 мс мал для `uv sync`
+  after_create: git worktree add . <branch> && uv sync --all-extras --dev
+  before_run: git pull origin main && make check
+  after_run: make check   # ТОЛЬКО верификация — про коммит см. ниже
 agent:
-  max_concurrent_agents: 2   # на одной машине держи низким
+  max_concurrent_agents: 2   # на одной машине держи низким (дефолт спеки — 10)
   max_turns: 20
   max_retry_backoff_ms: 300000
 ---
@@ -63,8 +67,10 @@ agent:
 ## Ключевые концепции (для адаптации)
 
 1. **Workspace isolation** — задача в своём worktree/директории.
-2. **Hooks** — `after_create` (worktree + install), `before_run` (pull + preflight),
-   `after_run` (верификация + коммит), `before_remove` (архивация лога).
+2. **Hooks** — `after_create` (worktree + install, только на новом workspace),
+   `before_run` (pull + preflight; его падение отменяет попытку), `after_run` (верификация),
+   `before_remove` (архивация лога). У `after_run` и `before_remove` падения логируются и
+   игнорируются — гейтом они не работают.
 3. **State machine**: Unclaimed → Claimed → Running → RetryQueued → Released.
 4. **Retry**: continuation при норме, exponential backoff при ошибках.
 5. **Concurrency**: при прогоне на одной машине держи `max_concurrent_agents` низким (1-2) —
@@ -74,7 +80,9 @@ agent:
 ## Чеклист Symphony
 
 - [ ] Выбран осознанно (задач достаточно много, они независимы)
-- [ ] WORKFLOW.md с валидным YAML front-matter
+- [ ] WORKFLOW.md сверен с актуальной SPEC: **валидный YAML ≠ рабочая конфигурация**
+      (состояния — списки, `hooks.timeout_ms` покрывает установку зависимостей,
+      в `after_run` нет коммита)
 - [ ] Hooks: минимум after_create и before_run
 - [ ] Workspace root указан и доступен
 - [ ] Промпт-шаблон использует {{ issue.* }} и {{ attempt }} и ссылается на навык-гейты
@@ -83,6 +91,11 @@ agent:
 
 ## Антипаттерны
 
+- **НЕ коммить из `after_run`.** По SPEC он срабатывает после *каждой* попытки — включая
+  падение, таймаут и отмену, — а его собственные ошибки игнорируются. `git add -A && git commit`
+  здесь однажды уедет с недоделанной работой, и никто не узнает. Коммит делает агент внутри
+  прогона по DoD; хук — только проверяет. По той же причине не полагайся на «`make check` строкой
+  выше»: без `&&` следующая команда выполнится и на красном гейте.
 - НЕ включай Symphony, пока базовый harness не доказал надёжность.
 - НЕ ставь высокий параллелизм на одной машине с одной БД.
 - НЕ давай агенту permissive approval/sandbox в проде; минимальные привилегии.

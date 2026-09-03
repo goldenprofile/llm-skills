@@ -12,7 +12,7 @@ description: >
   агентов», или хочет, чтобы правила проекта соблюдались автоматически, а не на
   память.
 metadata:
-  version: 1.8.0
+  version: 1.8.1
 ---
 
 # Harness Engineering — обвязка проекта для AI-агентов
@@ -63,12 +63,14 @@ overkill на малом потоке задач — см. [references/symphony.
    реально загрузились — `/context`; список кандидатов на вынос собирай сам по этому
    разделу, готовой команды для этого в базовой поставке нет.
 1. **Enforcement** — три уровня, от сильного к слабому:
-   - **Makefile** (кросс-платформенный) + **CI**. Цели под Python-стек
+   - **Раннер проекта** (`make`/`just`/`nox` — какой уже есть) + **CI**. Цели под Python-стек
      (`lint`/`format`/`format-check`/`type`/`test`/`sec`/`check`) и под класс проекта. Полные шаблоны:
      [references/tooling.md](references/tooling.md).
    - **Hooks** (`.claude/settings.json` → `hooks`) — enforcement, не зависящий от того, вспомнит
-     ли агент про Makefile. `PreToolUse` может **заблокировать** вызов, `PostToolUse` — среагировать
-     на правку, `Stop` — прогнать финальный гейт в конце хода. Это и есть «среда не даёт забыть».
+     ли агент про гейт. `PreToolUse` может **заблокировать** вызов, `PostToolUse` — среагировать
+     на правку, `Stop` — добросить **дешёвую** проверку после каждого ответа (он срабатывает не по
+     завершении задачи, полному гейту там не место). Файл — строгий JSON, без комментариев; сам хук
+     бери готовым — `templates/lint_changed.py` (stdlib, без `jq` и shell-специфики).
      События и точный формат блокировки: [references/policy-and-docs.md](references/policy-and-docs.md).
    - **Permissions** (`.claude/settings.json` → `permissions.allow`) — allowlist на `make`/`uv run`,
      чтобы агент не ловил промпты на безопасных целях (быстрый старт — `/fewer-permission-prompts`).
@@ -94,7 +96,8 @@ overkill на малом потоке задач — см. [references/symphony.
    применяй только безопасные автофиксы, остальное — в ROADMAP/lessons как долг с **ratchet**
    (CI падает на *новом*, не на всём legacy). «Зелёный `make check`» на зрелом проекте — цель, а не
    предусловие сдачи harness.
-3. Запиши пойманные грабли в `tasks/lessons.md`. Если создан WORKFLOW.md — проверь, что YAML парсится.
+3. Запиши пойманные грабли в `tasks/lessons.md`. Если создан WORKFLOW.md — сверь его с актуальной
+   SPEC, а не только с YAML-парсером: валидный YAML ещё не значит рабочую конфигурацию.
 
 ## Definition of Done — вшить вызовы навыков и гейтов
 
@@ -137,11 +140,13 @@ overkill на малом потоке задач — см. [references/symphony.
 ## Чеклист готовности
 
 **Базовый harness (обязательно):**
-- [ ] `Makefile` с целями `lint/format/format-check/type/test/sec/check` + цели класса проекта
+- [ ] Раннер проекта (`make`/`just`/`nox`) с целями `lint/format/format-check/type/test/sec/check`
+      + цели класса проекта; если раннер вводится впервые — его установка записана предусловием
 - [ ] CI (GitHub Actions): джобы по capability — `lint`+`type` (без сервисов), `test`
       (с Postgres/Redis), `sec`; safe-by-default до настройки секретов; actions пиннятся по SHA
-- [ ] `.claude/settings.json` — `permissions.allow` на `make`/`uv run` + хук `PostToolUse`
-      (линт изменённого файла); опц. `PreToolUse` на рискованные `Bash`
+- [ ] `.claude/settings.json` — строгий JSON (проверен на парсинг), `permissions.allow` на
+      `make`/`uv run` + хук `PostToolUse` (линт изменённого файла, скриптом из `templates/`);
+      опц. `PreToolUse` на рискованные `Bash`
 - [ ] committed `CLAUDE.md` **переносим** (без машинной специфики) и ≤ 200 строк; машинное — в
       `~/.claude/CLAUDE.md`/`CLAUDE.local.md` (последний в `.gitignore`); редко нужное — в
       `.claude/rules/` с `paths:`; при наличии `AGENTS.md` он canonical, а `CLAUDE.md` его импортирует
