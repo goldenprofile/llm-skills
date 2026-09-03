@@ -10,7 +10,7 @@
       "name": "llm-skills",
       "source": "./",
       "description": "24 Agent Skills: Django/FastAPI/aiogram audits, code review, test writing, VPS deploy, observability, incident triage, DB migration safety, Postgres performance, releases, SEO, docs, virtual team coordinator (sage), harness engineering, /goal pipeline, ratchet loop, task decomposition, context hygiene, LLM delegation, LLM features in product and Obsidian workflows.",
-      "version": "1.16.0"
+      "version": "1.16.2"
     }
   ]
 }
